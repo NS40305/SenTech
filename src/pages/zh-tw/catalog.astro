@@ -1,0 +1,168 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SiteHeader from '../../components/layout/SiteHeader.astro';
+import SiteFooter from '../../components/layout/SiteFooter.astro';
+import FloatingRfqButton from '../../components/layout/FloatingRfqButton.astro';
+import Section from '../../components/layout/Section.astro';
+import Container from '../../components/layout/Container.astro';
+import Eyebrow from '../../components/primitives/Eyebrow.astro';
+import PageHero from '../../components/primitives/PageHero.astro';
+import { localizedPath } from '../../i18n/ui';
+
+const locale = 'zh-TW' as const;
+const catalogPdf = '/pdfs/sentech-catalog-placeholder.pdf';
+
+const products = await getCollection('products', ({ data }) => data.locale === 'zh-TW');
+const sortedProducts = products
+  .map((e) => e.data)
+  .sort((a, b) => a.name.localeCompare(b.name));
+---
+<BaseLayout
+  title="產品型錄 — 線上預覽 — 業達科技"
+  description="線上預覽或下載業達 NTC 熱敏電阻完整產品型錄。"
+  locale={locale}
+  path="/zh-tw/catalog"
+>
+  <SiteHeader slot="header" locale={locale} />
+
+  <PageHero
+    eyebrow="產品型錄"
+    title="業達 NTC 熱敏電阻產品型錄"
+    subtitle="線上預覽完整型錄，或直接點擊下方任一產品查看其專屬資料表。"
+  />
+
+  <Section surface="white">
+    <Container>
+      <div class="cat__layout">
+        <aside class="cat__side">
+          <div class="cat__actions">
+            <a class="btn btn--primary cat__download" href={catalogPdf} download>
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                <path d="M12 4v12" stroke-linecap="round" />
+                <path d="M6 12l6 6 6-6" stroke-linecap="round" stroke-linejoin="round" />
+                <path d="M4 20h16" stroke-linecap="round" />
+              </svg>
+              <span>下載型錄</span>
+            </a>
+            <a class="cat__open-new" href={catalogPdf} target="_blank" rel="noopener">
+              新分頁開啟
+              <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                <path d="M6 3H3v10h10v-3M9 3h4v4M9 7l5-5" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </a>
+          </div>
+
+          <div class="cat__list">
+            <h2>各產品資料表</h2>
+            <ul>
+              {sortedProducts.map((p) => (
+                <li>
+                  <a href={localizedPath(locale, `/products/${p.slug}`)}>
+                    <span class="cat__list-name">{p.name}</span>
+                    <span class="cat__list-meta">
+                      <span class="cat__list-family">{p.family}</span>
+                      <span class="cat__list-arrow" aria-hidden="true">→</span>
+                    </span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </aside>
+
+        <div class="cat__viewer">
+          <header class="cat__viewer-head">
+            <Eyebrow>線上預覽</Eyebrow>
+            <h2 class="cat__viewer-title">完整產品型錄</h2>
+            <p class="cat__viewer-note">目前為示範型錄。上線前請以正式中英雙語型錄取代 <code>public/pdfs/sentech-catalog.pdf</code>。</p>
+          </header>
+          <div class="cat__frame-wrap">
+            <iframe
+              class="cat__frame"
+              src={`${catalogPdf}#view=FitH`}
+              title="業達科技產品型錄 PDF"
+              loading="lazy"
+            ></iframe>
+          </div>
+        </div>
+      </div>
+    </Container>
+  </Section>
+
+  <SiteFooter slot="footer" locale={locale} />
+  <FloatingRfqButton locale={locale} />
+</BaseLayout>
+
+<style>
+  .cat__layout {
+    display: grid; grid-template-columns: 1fr; gap: var(--space-5);
+  }
+  .cat__side { display: flex; flex-direction: column; gap: var(--space-4); }
+  .cat__actions {
+    display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3);
+  }
+  .cat__download { display: inline-flex; align-items: center; gap: 8px; }
+  .cat__open-new {
+    color: var(--color-accent); font-weight: 600; font-size: 14px;
+    text-decoration: none; display: inline-flex; align-items: center; gap: 6px;
+  }
+  .cat__open-new:hover { text-decoration: underline; }
+
+  .cat__list {
+    background: var(--color-surface); border: 1px solid var(--color-stroke);
+    border-radius: var(--radius-card); padding: var(--space-4);
+  }
+  .cat__list h2 {
+    font-family: var(--font-display); font-size: 13px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.08em;
+    color: var(--color-primary); margin-bottom: var(--space-3);
+  }
+  .cat__list ul { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 2px; }
+  .cat__list a {
+    display: flex; justify-content: space-between; align-items: center; gap: var(--space-3);
+    padding: 10px 12px; border-radius: var(--radius-button);
+    text-decoration: none; color: var(--color-carbon);
+    transition: background-color var(--duration-fast) var(--easing-base);
+  }
+  .cat__list a:hover { background: #fff; color: var(--color-accent); }
+  .cat__list-name {
+    font-family: var(--font-display); font-size: 14px; font-weight: 600;
+  }
+  .cat__list-meta { display: flex; gap: 10px; align-items: center; font-size: 11px; color: var(--color-text-muted); }
+  .cat__list-family {
+    text-transform: uppercase; letter-spacing: 0.06em; font-weight: 600;
+  }
+  .cat__list-arrow { color: var(--color-accent); font-weight: 700; }
+
+  .cat__viewer {
+    background: #fff; border: 1px solid var(--color-stroke);
+    border-radius: var(--radius-card); overflow: hidden;
+  }
+  .cat__viewer-head {
+    padding: var(--space-3) var(--space-4); border-bottom: 1px solid var(--color-stroke);
+    background: var(--color-surface);
+    display: flex; flex-direction: column; gap: 4px;
+  }
+  .cat__viewer-title {
+    font-family: var(--font-display); font-size: 16px; font-weight: 700;
+    color: var(--color-primary);
+  }
+  .cat__viewer-note {
+    font-size: 12px; color: var(--color-text-muted);
+  }
+  .cat__viewer-note code {
+    background: var(--color-surface-alt); padding: 1px 6px; border-radius: 3px;
+    font-family: var(--font-mono); font-size: 11px;
+  }
+  .cat__frame-wrap {
+    position: relative; aspect-ratio: 4 / 5; background: var(--color-surface-alt);
+  }
+  .cat__frame {
+    position: absolute; inset: 0; width: 100%; height: 100%; border: 0; display: block; background: #fff;
+  }
+  @media (min-width: 1024px) {
+    .cat__layout { grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: var(--space-7); align-items: start; }
+    .cat__frame-wrap { min-height: 760px; }
+  }
+</style>

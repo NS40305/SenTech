@@ -1,6 +1,5 @@
 ---
-import PdfPreview from '../primitives/PdfPreview.astro';
-import type { Locale } from '../../i18n/ui';
+import { localizedPath, type Locale } from '../../i18n/ui';
 
 export interface Props {
   slug: string;
@@ -16,8 +15,6 @@ export interface Props {
   pdfUrl?: string;
   image: string;
   summary: string;
-  href?: string;
-  ctaLabel?: string;
   pdfLabel?: string;
   locale?: Locale;
 }
@@ -33,18 +30,15 @@ const {
   dissipation,
   timeConstant,
   maxPower,
-  pdfUrl,
   image,
   summary,
-  href,
-  ctaLabel = 'View details',
   pdfLabel,
   locale = 'en',
 } = Astro.props;
 
-const pdfTriggerLabel =
-  pdfLabel ?? (locale === 'zh-TW' ? 'PDF 型錄規格下載' : 'PDF Specification');
-const effectivePdfUrl = pdfUrl ?? '/pdfs/sentech-catalog-placeholder.pdf';
+const detailHref = localizedPath(locale, `/products/${slug}`);
+const previewLabel =
+  pdfLabel ?? (locale === 'zh-TW' ? 'PDF 線上預覽' : 'PDF preview');
 
 type SpecRow = { label: string; value: string; numeric?: boolean; emphasis?: boolean };
 
@@ -67,51 +61,47 @@ if (maxPower) secondarySpecs.push({ label: 'Max power', value: maxPower, numeric
 const imageSrc = `/images/product-${image}.jpg`;
 ---
 <article class="product-card" data-slug={slug}>
-  <div class="product-card__media">
-    <img src={imageSrc} alt={name} loading="lazy" decoding="async" width="480" height="320" />
-    <span class="product-card__family">{family}</span>
-  </div>
-  <div class="product-card__body">
-    <h3 class="product-card__name">{name}</h3>
-    <p class="product-card__summary">{summary}</p>
-
-    <dl class="spec-table">
-      {primarySpecs.map((s) => (
-        <div class:list={['spec-row', s.emphasis && 'spec-row--emphasis']}>
-          <dt class="spec-row__label">{s.label}</dt>
-          <dd class:list={['spec-row__value', s.numeric && 'spec-row__value--num']}>{s.value}</dd>
-        </div>
-      ))}
-
-      {secondarySpecs.length > 0 && (
-        <>
-          <div class="spec-divider" aria-hidden="true"></div>
-          {secondarySpecs.map((s) => (
-            <div class="spec-row spec-row--secondary">
-              <dt class="spec-row__label">{s.label}</dt>
-              <dd class:list={['spec-row__value', s.numeric && 'spec-row__value--num']}>{s.value}</dd>
-            </div>
-          ))}
-        </>
-      )}
-    </dl>
-
-    <div class="product-card__actions">
-      <PdfPreview
-        pdfUrl={effectivePdfUrl}
-        triggerLabel={pdfTriggerLabel}
-        modalTitle={`${name} — ${pdfTriggerLabel}`}
-        locale={locale}
-        variant="inline"
-      />
-      {href && (
-        <a class="product-card__cta" href={href}>
-          {ctaLabel}
-          <span aria-hidden="true">→</span>
-        </a>
-      )}
+  <a class="product-card__link" href={detailHref} aria-label={`${name} — ${previewLabel}`}>
+    <div class="product-card__media">
+      <img src={imageSrc} alt={name} loading="lazy" decoding="async" width="480" height="320" />
+      <span class="product-card__family">{family}</span>
     </div>
-  </div>
+    <div class="product-card__body">
+      <h3 class="product-card__name">{name}</h3>
+      <p class="product-card__summary">{summary}</p>
+
+      <dl class="spec-table">
+        {primarySpecs.map((s) => (
+          <div class:list={['spec-row', s.emphasis && 'spec-row--emphasis']}>
+            <dt class="spec-row__label">{s.label}</dt>
+            <dd class:list={['spec-row__value', s.numeric && 'spec-row__value--num']}>{s.value}</dd>
+          </div>
+        ))}
+
+        {secondarySpecs.length > 0 && (
+          <>
+            <div class="spec-divider" aria-hidden="true"></div>
+            {secondarySpecs.map((s) => (
+              <div class="spec-row spec-row--secondary">
+                <dt class="spec-row__label">{s.label}</dt>
+                <dd class:list={['spec-row__value', s.numeric && 'spec-row__value--num']}>{s.value}</dd>
+              </div>
+            ))}
+          </>
+        )}
+      </dl>
+
+      <div class="product-card__cta">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+          <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z" />
+          <polyline points="14 3 14 8 19 8" />
+          <path d="M9 13h1.5a1.5 1.5 0 0 1 0 3H9zM9 13v6" />
+        </svg>
+        <span>{previewLabel}</span>
+        <span class="product-card__cta-arrow" aria-hidden="true">→</span>
+      </div>
+    </div>
+  </a>
 </article>
 
 <style>
@@ -237,24 +227,36 @@ const imageSrc = `/images/product-${image}.jpg`;
     opacity: 0.7;
   }
 
-  .product-card__actions {
+  .product-card__link {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--space-3);
-    margin-top: var(--space-2);
-    flex-wrap: wrap;
+    flex-direction: column;
+    height: 100%;
+    color: inherit;
+    text-decoration: none;
+  }
+  .product-card__link:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+    border-radius: var(--radius-card);
   }
   .product-card__cta {
+    margin-top: var(--space-3);
+    padding-top: var(--space-3);
+    border-top: 1px solid var(--color-stroke);
     color: var(--color-accent);
     font-weight: 600;
     font-size: 13px;
-    text-decoration: none;
     display: inline-flex;
     align-items: center;
-    gap: 6px;
+    gap: 8px;
+    transition: color var(--duration-fast) var(--easing-base);
   }
-  .product-card__cta:hover { text-decoration: underline; }
+  .product-card__cta-arrow {
+    margin-left: auto;
+    font-weight: 700;
+    transition: transform var(--duration-fast) var(--easing-base);
+  }
+  .product-card:hover .product-card__cta-arrow { transform: translateX(3px); }
 
   @media (max-width: 380px) {
     .spec-row { grid-template-columns: 76px 1fr; column-gap: var(--space-2); }
