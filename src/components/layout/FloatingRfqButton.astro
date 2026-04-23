@@ -104,6 +104,10 @@ const tooltip = locale === 'zh-TW' ? '送出詢價（含已選規格）' : 'Send
     box-shadow: 0 2px 8px rgba(0, 166, 192, 0.4);
     animation: frb-bounce 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   }
+  /* `display: inline-flex` above overrides the browser default
+     [hidden] { display: none } via specificity, so we restore it
+     explicitly. Without this, badge.hidden = true never hides the badge. */
+  .frb__badge[hidden] { display: none !important; }
   @keyframes frb-bounce {
     0% { transform: scale(0.6); opacity: 0; }
     50% { transform: scale(1.15); }

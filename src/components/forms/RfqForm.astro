@@ -395,6 +395,8 @@ const subject =
     flex-direction: column;
     gap: var(--space-2);
   }
+  /* explicit display above overrides [hidden]; restore the hide behavior */
+  .rfq-form__shortlist[hidden] { display: none !important; }
   .rfq-form__shortlist-head {
     display: flex;
     justify-content: space-between;
