@@ -182,7 +182,9 @@ function sortAccuracies(arr: string[]): string[] {
 
   function write(items: ShortlistItem[]): void {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
-    document.dispatchEvent(new CustomEvent('sentech:rfq:changed', { detail: { count: items.length } }));
+    const detail = { count: items.length };
+    document.dispatchEvent(new CustomEvent('sentech:rfq:changed', { detail }));
+    window.dispatchEvent(new CustomEvent('sentech:rfq:changed', { detail }));
   }
 
   function keyOf(it: { slug: string; bValue: number; r25: number; accuracy: string }): string {

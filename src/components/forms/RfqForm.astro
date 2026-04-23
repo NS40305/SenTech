@@ -181,7 +181,9 @@ const subject =
 
   function clearShortlist(): void {
     localStorage.removeItem(SHORTLIST_KEY);
-    document.dispatchEvent(new CustomEvent('sentech:rfq:changed', { detail: { count: 0 } }));
+    const detail = { count: 0 };
+    document.dispatchEvent(new CustomEvent('sentech:rfq:changed', { detail }));
+    window.dispatchEvent(new CustomEvent('sentech:rfq:changed', { detail }));
   }
 
   function formatShortlist(items: ShortlistItem[], locale: string): string {
@@ -248,7 +250,9 @@ const subject =
           const items = readShortlist();
           items.splice(idx, 1);
           localStorage.setItem(SHORTLIST_KEY, JSON.stringify(items));
-          document.dispatchEvent(new CustomEvent('sentech:rfq:changed', { detail: { count: items.length } }));
+          const detail = { count: items.length };
+          document.dispatchEvent(new CustomEvent('sentech:rfq:changed', { detail }));
+          window.dispatchEvent(new CustomEvent('sentech:rfq:changed', { detail }));
           renderShortlist();
         });
       });

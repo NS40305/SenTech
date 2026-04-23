@@ -12,26 +12,56 @@ const tooltip = locale === 'zh-TW' ? '送出詢價（含已選規格）' : 'Send
 
 <script>
   const STORAGE_KEY = 'sentech.rfq.shortlist';
-  function update(): void {
-    const badge = document.querySelector<HTMLElement>('[data-rfq-badge]');
-    if (!badge) return;
-    let count = 0;
+  let lastCount = -1;
+
+  function readCount(): number {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
       const parsed = raw ? JSON.parse(raw) : [];
-      if (Array.isArray(parsed)) count = parsed.length;
-    } catch {}
+      return Array.isArray(parsed) ? parsed.length : 0;
+    } catch {
+      return 0;
+    }
+  }
+
+  function update(): void {
+    const badge = document.querySelector<HTMLElement>('[data-rfq-badge]');
+    if (!badge) return;
+    const count = readCount();
+    if (count === lastCount) return; // no change → no DOM mutation
+    lastCount = count;
     if (count > 0) {
       badge.textContent = String(count);
       badge.hidden = false;
+      // Re-trigger bounce animation on every count change
+      badge.style.animation = 'none';
+      void badge.offsetWidth;
+      badge.style.animation = '';
     } else {
       badge.hidden = true;
     }
   }
-  if (document.readyState !== 'loading') update();
-  else document.addEventListener('DOMContentLoaded', update);
-  document.addEventListener('sentech:rfq:changed', update);
-  window.addEventListener('storage', (e) => { if (e.key === STORAGE_KEY) update(); });
+
+  function start(): void {
+    update();
+    // Listen on both document and window to catch dispatches from any component
+    document.addEventListener('sentech:rfq:changed', update);
+    window.addEventListener('sentech:rfq:changed', update);
+    // Cross-tab sync via storage event
+    window.addEventListener('storage', (e) => {
+      if (e.key === STORAGE_KEY) update();
+    });
+    // Re-sync when tab becomes visible (handles cases where the event was
+    // dispatched while the badge was hidden / page not focused)
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden) update();
+    });
+    // Safety-net poll: catches any missed event dispatches within 400 ms
+    setInterval(update, 400);
+  }
+
+  if (document.readyState !== 'loading') start();
+  else document.addEventListener('DOMContentLoaded', start);
 </script>
 
 <style>
