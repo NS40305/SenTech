@@ -81,5 +81,5 @@ export function localizedPath(locale: Locale, path: string): string {
 }
 
 export function stripLocaleFromPath(path: string): string {
-  return path.replace(/^\/zh-tw/, '') || '/';
+  return path.replace(/^\/zh-tw(?=\/|$)/, '') || '/';
 }

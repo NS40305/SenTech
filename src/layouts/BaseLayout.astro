@@ -1,6 +1,6 @@
 ---
 import '../styles/global.css';
-import type { Locale } from '../i18n/ui';
+import { localizedPath, stripLocaleFromPath, type Locale } from '../i18n/ui';
 
 export interface Props {
   title: string;
@@ -14,8 +14,9 @@ const { title, description, locale, path, ogImage = '/og-image.jpg' } = Astro.pr
 const htmlLang = locale === 'zh-TW' ? 'zh-TW' : 'en';
 const siteUrl = Astro.site?.toString() ?? 'https://sentech-redesign.pages.dev';
 const canonical = new URL(path, siteUrl).toString();
-const altPath = locale === 'en' ? `/zh-tw${path === '/' ? '' : path}` : path.replace(/^\/zh-tw/, '') || '/';
-const altLocale = locale === 'en' ? 'zh-TW' : 'en';
+const altLocale: Locale = locale === 'en' ? 'zh-TW' : 'en';
+const cleanPath = stripLocaleFromPath(path);
+const altPath = localizedPath(altLocale, cleanPath);
 ---
 <!DOCTYPE html>
 <html lang={htmlLang}>
@@ -26,12 +27,13 @@ const altLocale = locale === 'en' ? 'zh-TW' : 'en';
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
+    <link rel="alternate" hreflang={locale} href={canonical} />
     <link
       rel="alternate"
       hreflang={altLocale === 'zh-TW' ? 'zh-TW' : 'en'}
       href={new URL(altPath, siteUrl).toString()}
     />
-    <link rel="alternate" hreflang="x-default" href={new URL('/', siteUrl).toString()} />
+    <link rel="alternate" hreflang="x-default" href={new URL(locale === 'en' ? path : cleanPath, siteUrl).toString()} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />

@@ -25,4 +25,9 @@ describe('i18n helpers', () => {
     expect(stripLocaleFromPath('/zh-tw')).toBe('/');
     expect(stripLocaleFromPath('/products')).toBe('/products');
   });
+
+  it('does not incorrectly strip zh-tw prefix from a path that starts with zh-tw but has more letters', () => {
+    expect(stripLocaleFromPath('/zh-twin')).toBe('/zh-twin');
+    expect(stripLocaleFromPath('/zh-tw-extra')).toBe('/zh-tw-extra');
+  });
 });
