@@ -1,0 +1,35 @@
+---
+export interface Props {
+  value: string | number;
+  label: string;
+  prefix?: string;
+  suffix?: string;
+  animate?: boolean;
+}
+const { value, label, prefix = '', suffix = '', animate = false } = Astro.props;
+const valueStr = String(value);
+---
+<div class="stat" data-animate={animate ? 'true' : undefined}>
+  <div class="stat__value">
+    {prefix && <span class="stat__prefix">{prefix}</span>}
+    <span class="stat__number" data-target={valueStr}>{valueStr}</span>
+    {suffix && <span class="stat__suffix">{suffix}</span>}
+  </div>
+  <div class="stat__label">{label}</div>
+</div>
+
+<style>
+  .stat { display: flex; flex-direction: column; gap: var(--space-2); }
+  .stat__value {
+    font-family: var(--font-mono);
+    font-size: clamp(32px, 4vw, 48px);
+    font-weight: 700;
+    color: var(--color-primary);
+    line-height: 1;
+  }
+  .stat__label {
+    font-size: 14px;
+    color: var(--color-text-muted);
+    letter-spacing: 0.04em;
+  }
+</style>
