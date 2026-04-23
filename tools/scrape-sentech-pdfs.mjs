@@ -60,6 +60,54 @@ const SOURCES = [
     pdfPath:
       '/web/content/3827?access_token=9bd185dc-e6c7-425c-a532-453bdf8b318d&unique=8af093cf6d916bdf2fca99bc017dcedf1a23a937&download=true',
   },
+  {
+    slug: 'dt-diode',
+    page: `${ORIGIN}/ntc_08.html`,
+    pdfPath:
+      '/web/content/4039?access_token=ddc6769c-7be0-4aa3-9470-a24bfbdd4598&unique=fb02aa240df627123dfdb3c259f62104fd4e9ac4&download=true',
+  },
+  {
+    slug: 'ct-smd-chip',
+    page: `${ORIGIN}/ntc_09.html`,
+    pdfPath:
+      '/web/content/4040?access_token=da32b11a-2ec0-4fa5-ad61-486b91fdedc9&unique=25ece69eb30e687f7017207839ccce33f458b4f8&download=true',
+  },
+  {
+    slug: 'sm-smd-ceramic',
+    page: `${ORIGIN}/ntc_10.html`,
+    pdfPath:
+      '/web/content/4041?access_token=6217e842-211d-47d3-bdbd-0c68eaaa5ce8&unique=8682638cf8e62f2e0c460600184eacb5132770e0&download=true',
+  },
+  {
+    slug: 'tr-transducer',
+    page: `${ORIGIN}/ntc_11.html`,
+    pdfPath:
+      '/web/content/4042?access_token=3e84de4a-127e-419a-bf65-ec1e65f8df98&unique=17764de843dfd3ac061d83caa236349abea144bc&download=true',
+  },
+  {
+    slug: 'ls-life-sciences',
+    page: `${ORIGIN}/ntc_12.html`,
+    pdfPath:
+      '/web/content/4043?access_token=8a468e89-55f4-40e8-81d3-ad12028a7198&unique=0f975d6d9d06ba81f9dad381cde8c5de2b2e82c6&download=true',
+  },
+  {
+    slug: 'lsmn-mini-probe',
+    page: `${ORIGIN}/ntc_13.html`,
+    pdfPath:
+      '/web/content/4044?access_token=a6638ce2-02cd-42e1-b092-4b88370786b4&unique=be2f082a65ca8ed7e358b5df86ffe37053191899&download=true',
+  },
+  {
+    slug: 'lsmc-micro-probe',
+    page: `${ORIGIN}/ntc_14.html`,
+    pdfPath:
+      '/web/content/4045?access_token=12898521-6dbe-4844-a412-c69c5a03c562&unique=116825189bb69cdf6d21a91d08f5243ab6593709&download=true',
+  },
+  {
+    slug: 'custom-assembly',
+    page: `${ORIGIN}/ntc_15.html`,
+    pdfPath:
+      '/web/content/4046?access_token=bf3d7c6b-0b46-47e3-b12d-933aede880a9&unique=1d0de9692db8b83b3ae1d63387673a956b238d99&download=true',
+  },
 ];
 
 const OUT_DIR = resolve(process.cwd(), 'public/pdfs');

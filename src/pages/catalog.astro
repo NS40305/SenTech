@@ -78,33 +78,29 @@ const sortedProducts = products
             <p class="cat__viewer-note">Placeholder catalog — replace <code>public/pdfs/sentech-catalog.pdf</code> with the production master catalog before launch.</p>
           </header>
           <div class="cat__frame-wrap">
-            <iframe
+            <object
               class="cat__frame"
-              src={`${catalogPdf}#view=FitH`}
-              title="SEN TECH product catalog PDF"
-              loading="lazy"
-            ></iframe>
-
-            <div class="cat__mobile-fallback">
-              <div class="cat__mobile-icon" aria-hidden="true">
-                <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M28 4H10a3 3 0 0 0-3 3v34a3 3 0 0 0 3 3h28a3 3 0 0 0 3-3V17z" />
-                  <polyline points="28 4 28 17 41 17" />
-                  <text x="14" y="34" font-family="monospace" font-size="9" fill="currentColor" stroke="none" font-weight="700">PDF</text>
-                </svg>
+              data={`${catalogPdf}#view=FitH&toolbar=1`}
+              type="application/pdf"
+              aria-label="SEN TECH product catalog PDF preview"
+            >
+              <div class="cat__inline-fallback">
+                <div class="cat__mobile-icon" aria-hidden="true">
+                  <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M28 4H10a3 3 0 0 0-3 3v34a3 3 0 0 0 3 3h28a3 3 0 0 0 3-3V17z" />
+                    <polyline points="28 4 28 17 41 17" />
+                    <text x="14" y="34" font-family="monospace" font-size="9" fill="currentColor" stroke="none" font-weight="700">PDF</text>
+                  </svg>
+                </div>
+                <h3 class="cat__mobile-title">SEN TECH product catalog</h3>
+                <p class="cat__mobile-sub">Inline PDF preview isn't available on this browser. Open the file to view it.</p>
+                <div class="cat__mobile-actions">
+                  <a class="btn btn--primary" href={catalogPdf} target="_blank" rel="noopener">Open catalog</a>
+                  <a class="btn btn--secondary" href={catalogPdf} download>Download</a>
+                </div>
+                <p class="cat__mobile-tip">Or pick a specific product datasheet from the list above.</p>
               </div>
-              <h3 class="cat__mobile-title">SEN TECH product catalog</h3>
-              <p class="cat__mobile-sub">Inline PDF preview is not supported on most mobile browsers. Open or download the catalog to view it.</p>
-              <div class="cat__mobile-actions">
-                <a class="btn btn--primary" href={catalogPdf} target="_blank" rel="noopener">
-                  Open catalog
-                </a>
-                <a class="btn btn--secondary" href={catalogPdf} download>
-                  Download
-                </a>
-              </div>
-              <p class="cat__mobile-tip">Or pick a specific product datasheet from the list above.</p>
-            </div>
+            </object>
           </div>
         </div>
       </div>
@@ -181,21 +177,19 @@ const sortedProducts = products
     background: var(--color-surface-alt);
   }
   .cat__frame {
-    position: absolute; inset: 0; width: 100%; height: 100%; border: 0; display: block; background: #fff;
+    width: 100%; height: 100%; border: 0; display: block; background: #fff;
   }
 
-  /* Mobile / tablet fallback */
-  .cat__mobile-fallback {
-    position: absolute; inset: 0;
+  /* Inline fallback — only renders when <object> can't display the PDF */
+  .cat__inline-fallback {
+    width: 100%; height: 100%;
     display: flex; flex-direction: column;
     align-items: center; justify-content: center;
     gap: var(--space-3);
     padding: var(--space-5) var(--space-4);
     text-align: center;
     background: linear-gradient(180deg, var(--color-surface) 0%, #fff 100%);
-    z-index: 1;
   }
-  .cat__frame { display: none; }
   .cat__mobile-icon { width: 64px; height: 64px; color: var(--color-accent); margin-bottom: var(--space-2); }
   .cat__mobile-icon svg { width: 100%; height: 100%; }
   .cat__mobile-title {
@@ -209,7 +203,5 @@ const sortedProducts = products
   @media (min-width: 1024px) {
     .cat__layout { grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: var(--space-7); align-items: start; }
     .cat__frame-wrap { height: 820px; max-height: calc(100vh - 200px); }
-    .cat__frame { display: block; }
-    .cat__mobile-fallback { display: none; }
   }
 </style>

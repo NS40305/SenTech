@@ -1,5 +1,5 @@
 {
-  "capturedAt": "2026-04-23T19:00:16.883Z",
+  "capturedAt": "2026-04-23T20:28:29.374Z",
   "source": "https://www.sen-tech.com",
   "note": "Scraped from sen-tech.com Odoo CMS. Replace via npm run scrape:pdfs.",
   "files": [
@@ -58,6 +58,62 @@
       "sourcePdf": "https://www.sen-tech.com/web/content/3827?access_token=9bd185dc-e6c7-425c-a532-453bdf8b318d&unique=8af093cf6d916bdf2fca99bc017dcedf1a23a937&download=true",
       "localPath": "/pdfs/glass-bead.pdf",
       "bytes": 5957956
+    },
+    {
+      "slug": "dt-diode",
+      "sourcePage": "https://www.sen-tech.com/ntc_08.html",
+      "sourcePdf": "https://www.sen-tech.com/web/content/4039?access_token=ddc6769c-7be0-4aa3-9470-a24bfbdd4598&unique=fb02aa240df627123dfdb3c259f62104fd4e9ac4&download=true",
+      "localPath": "/pdfs/dt-diode.pdf",
+      "bytes": 783218
+    },
+    {
+      "slug": "ct-smd-chip",
+      "sourcePage": "https://www.sen-tech.com/ntc_09.html",
+      "sourcePdf": "https://www.sen-tech.com/web/content/4040?access_token=da32b11a-2ec0-4fa5-ad61-486b91fdedc9&unique=25ece69eb30e687f7017207839ccce33f458b4f8&download=true",
+      "localPath": "/pdfs/ct-smd-chip.pdf",
+      "bytes": 967116
+    },
+    {
+      "slug": "sm-smd-ceramic",
+      "sourcePage": "https://www.sen-tech.com/ntc_10.html",
+      "sourcePdf": "https://www.sen-tech.com/web/content/4041?access_token=6217e842-211d-47d3-bdbd-0c68eaaa5ce8&unique=8682638cf8e62f2e0c460600184eacb5132770e0&download=true",
+      "localPath": "/pdfs/sm-smd-ceramic.pdf",
+      "bytes": 3706688
+    },
+    {
+      "slug": "tr-transducer",
+      "sourcePage": "https://www.sen-tech.com/ntc_11.html",
+      "sourcePdf": "https://www.sen-tech.com/web/content/4042?access_token=3e84de4a-127e-419a-bf65-ec1e65f8df98&unique=17764de843dfd3ac061d83caa236349abea144bc&download=true",
+      "localPath": "/pdfs/tr-transducer.pdf",
+      "bytes": 747803
+    },
+    {
+      "slug": "ls-life-sciences",
+      "sourcePage": "https://www.sen-tech.com/ntc_12.html",
+      "sourcePdf": "https://www.sen-tech.com/web/content/4043?access_token=8a468e89-55f4-40e8-81d3-ad12028a7198&unique=0f975d6d9d06ba81f9dad381cde8c5de2b2e82c6&download=true",
+      "localPath": "/pdfs/ls-life-sciences.pdf",
+      "bytes": 928442
+    },
+    {
+      "slug": "lsmn-mini-probe",
+      "sourcePage": "https://www.sen-tech.com/ntc_13.html",
+      "sourcePdf": "https://www.sen-tech.com/web/content/4044?access_token=a6638ce2-02cd-42e1-b092-4b88370786b4&unique=be2f082a65ca8ed7e358b5df86ffe37053191899&download=true",
+      "localPath": "/pdfs/lsmn-mini-probe.pdf",
+      "bytes": 1005862
+    },
+    {
+      "slug": "lsmc-micro-probe",
+      "sourcePage": "https://www.sen-tech.com/ntc_14.html",
+      "sourcePdf": "https://www.sen-tech.com/web/content/4045?access_token=12898521-6dbe-4844-a412-c69c5a03c562&unique=116825189bb69cdf6d21a91d08f5243ab6593709&download=true",
+      "localPath": "/pdfs/lsmc-micro-probe.pdf",
+      "bytes": 135462
+    },
+    {
+      "slug": "custom-assembly",
+      "sourcePage": "https://www.sen-tech.com/ntc_15.html",
+      "sourcePdf": "https://www.sen-tech.com/web/content/4046?access_token=bf3d7c6b-0b46-47e3-b12d-933aede880a9&unique=1d0de9692db8b83b3ae1d63387673a956b238d99&download=true",
+      "localPath": "/pdfs/custom-assembly.pdf",
+      "bytes": 2599133
     }
   ]
 }

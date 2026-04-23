@@ -5,7 +5,6 @@ import SiteHeader from '../components/layout/SiteHeader.astro';
 import SiteFooter from '../components/layout/SiteFooter.astro';
 import FloatingRfqButton from '../components/layout/FloatingRfqButton.astro';
 import Hero from '../components/home/Hero.astro';
-import ThermistorShowcase from '../components/3d/ThermistorShowcase.astro';
 import NumbersStrip from '../components/home/NumbersStrip.astro';
 import ReasonsToChoose from '../components/home/ReasonsToChoose.astro';
 import ProductGrid from '../components/home/ProductGrid.astro';
@@ -73,8 +72,6 @@ const rfqBullets = [
     heroImage={heroImagePath}
     stats={homeData.hero.stats}
   />
-
-  <ThermistorShowcase locale={locale} />
 
   <NumbersStrip numbers={homeData.numbers} />
 

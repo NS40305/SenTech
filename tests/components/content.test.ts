@@ -19,11 +19,11 @@ describe('content collections', () => {
     expect(files).toContain('home-zh-TW.json');
   });
 
-  it('loads exactly 16 product entries (8 lines × 2 locales)', () => {
+  it('loads exactly 32 product entries (16 lines × 2 locales)', () => {
     const files = listFiles('products', '.md');
-    expect(files.length).toBe(16);
+    expect(files.length).toBe(32);
     const enCount = files.filter((f) => f.endsWith('-en.md')).length;
-    expect(enCount).toBe(8);
+    expect(enCount).toBe(16);
   });
 
   it('home numbers strip has exactly 5 stats per locale', () => {
