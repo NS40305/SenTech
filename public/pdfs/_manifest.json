@@ -1,0 +1,63 @@
+{
+  "capturedAt": "2026-04-23T19:00:16.883Z",
+  "source": "https://www.sen-tech.com",
+  "note": "Scraped from sen-tech.com Odoo CMS. Replace via npm run scrape:pdfs.",
+  "files": [
+    {
+      "slug": "nti-interchangeable",
+      "sourcePage": "https://www.sen-tech.com/ntc_01.html",
+      "sourcePdf": "https://www.sen-tech.com/web/content/2407?access_token=f34e2b6e-9505-4d98-8a64-a22e6246e85c&unique=b581b1c37731e7c16cc718fe6baf3411e30406ba&download=true",
+      "localPath": "/pdfs/nti-interchangeable.pdf",
+      "bytes": 5318147
+    },
+    {
+      "slug": "single-point-matched",
+      "sourcePage": "https://www.sen-tech.com/ntc_02.html",
+      "sourcePdf": "https://www.sen-tech.com/web/content/3834?access_token=50067f9e-f500-400a-b896-323c07bd31d7&unique=4e840710ef603519748dbf7e6de4a7b4f9847e97&download=true",
+      "localPath": "/pdfs/single-point-matched.pdf",
+      "bytes": 1673059
+    },
+    {
+      "slug": "ht-high-precision",
+      "sourcePage": "https://www.sen-tech.com/ntc_03.html",
+      "sourcePdf": "https://www.sen-tech.com/web/content/3832?access_token=f2df57c7-5b22-43f0-b067-793eb7bed934&unique=393146efc6ac715341a896fd1629083921f01456&download=true",
+      "localPath": "/pdfs/ht-high-precision.pdf",
+      "bytes": 811750
+    },
+    {
+      "slug": "hat-high-precision",
+      "sourcePage": "https://www.sen-tech.com/ntc_04.html",
+      "sourcePdf": "https://www.sen-tech.com/web/content/3839?access_token=edfcc86f-102b-494b-9850-bf58b60afe02&unique=d9c835318edf182a50ef4deec595e2e8b1877aad&download=true",
+      "localPath": "/pdfs/hat-high-precision.pdf",
+      "bytes": 849023
+    },
+    {
+      "slug": "ts-body-temperature",
+      "sourcePage": "https://www.sen-tech.com/ntc_05.html",
+      "sourcePdf": "https://www.sen-tech.com/web/content/3841?access_token=f7dbce1b-4095-47a1-a1b1-84fd4a52f563&unique=0be7993e57e5f83ee6a20e92986d45df9b06e776&download=true",
+      "localPath": "/pdfs/ts-body-temperature.pdf",
+      "bytes": 785796
+    },
+    {
+      "slug": "ta-4-flex",
+      "sourcePage": "https://www.sen-tech.com/ntc_06.html",
+      "sourcePdf": "https://www.sen-tech.com/web/content/4037?access_token=506046b7-206e-4cdb-bf64-d757286fedd3&unique=677e2fff7fdf2de2c0b2bb28c34b99ab097c2b27&download=true",
+      "localPath": "/pdfs/ta-4-flex.pdf",
+      "bytes": 837078
+    },
+    {
+      "slug": "tj-thin-film",
+      "sourcePage": "https://www.sen-tech.com/ntc_07.html",
+      "sourcePdf": "https://www.sen-tech.com/web/content/4038?access_token=1428250e-4528-4d37-a965-fd829e4b2ffc&unique=0a3b5145555f1ab311531cb357eb9e0a83ec5c88&download=true",
+      "localPath": "/pdfs/tj-thin-film.pdf",
+      "bytes": 1086128
+    },
+    {
+      "slug": "glass-bead",
+      "sourcePage": "https://www.sen-tech.com/ntc_16.html",
+      "sourcePdf": "https://www.sen-tech.com/web/content/3827?access_token=9bd185dc-e6c7-425c-a532-453bdf8b318d&unique=8af093cf6d916bdf2fca99bc017dcedf1a23a937&download=true",
+      "localPath": "/pdfs/glass-bead.pdf",
+      "bytes": 5957956
+    }
+  ]
+}

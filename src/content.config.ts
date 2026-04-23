@@ -82,6 +82,7 @@ const products = defineCollection({
     dissipation: z.string().optional(),
     timeConstant: z.string().optional(),
     maxPower: z.string().optional(),
+    pdfUrl: z.string().optional(),
     image: z.string(),
     summary: z.string(),
   }),

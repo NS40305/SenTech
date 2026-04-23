@@ -10,6 +10,7 @@ bValue: "提供全系列 R/T 曲線材料"
 dissipation: "GBL 1.1–1.8；GBM 1.0–1.6；GBS 0.7–0.9 mW/°C 靜止空氣"
 timeConstant: "GBL 10–17 秒；GBM 9–16 秒；GBS 3.5–6.5 秒（空氣中）"
 image: glass-bead
+pdfUrl: /pdfs/glass-bead.pdf
 summary: 玻璃密封徑向引線型 NTC，耐高溫至 250 °C，具優異耐潮濕與耐化學特性，適用於需高穩定性的高溫感測。
 ---
 

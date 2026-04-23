@@ -11,6 +11,7 @@ dissipation: "0.7 mW/°C in still air"
 timeConstant: "0.75 s in stirred oil"
 maxPower: "3.5 mW (at 25 °C)"
 image: ts-body-temperature
+pdfUrl: /pdfs/ts-body-temperature.pdf
 summary: Compact, fast-response NTC purpose-built for medical equipment and clinical thermometers. Smaller than HAT with high reliability and excellent thermal cycle endurance.
 ---
 

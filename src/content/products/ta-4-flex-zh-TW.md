@@ -11,6 +11,7 @@ dissipation: "2–4 mW/°C 靜止空氣"
 timeConstant: "5 秒（攪拌油中）"
 maxPower: "10 mW（於 25 °C）"
 image: ta-4-flex
+pdfUrl: /pdfs/ta-4-flex.pdf
 summary: 採柔性引線的 HAT 元件變體。PVC 包覆引線適用 −40 °C 至 +105 °C；鐵氟龍引線適用 −40 °C 至 +150 °C，適合線束組裝的 OEM 安裝。
 ---
 

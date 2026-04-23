@@ -10,6 +10,7 @@ bValue: "Available in all R/T curve materials"
 dissipation: "GBL 1.1–1.8; GBM 1.0–1.6; GBS 0.7–0.9 mW/°C still air"
 timeConstant: "GBL 10–17 s; GBM 9–16 s; GBS 3.5–6.5 s in air"
 image: glass-bead
+pdfUrl: /pdfs/glass-bead.pdf
 summary: Glass-sealed radial-lead NTC for high-temperature, high-stability sensing up to 250 °C with excellent moisture and chemical resistance.
 ---
 

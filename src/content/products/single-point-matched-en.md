@@ -11,6 +11,7 @@ dissipation: "2 mW/°C still air; 13 mW/°C stirred oil"
 timeConstant: "0.75 s in stirred oil"
 maxPower: "10 mW (at 25 °C)"
 image: single-point-matched
+pdfUrl: /pdfs/single-point-matched.pdf
 summary: Resistance-tolerance matched at a chosen temperature. Cost-effective high-volume sensing for HVAC, automotive, and industrial controls. RoHS compliant.
 ---
 

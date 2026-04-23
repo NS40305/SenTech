@@ -11,6 +11,7 @@ dissipation: "2–4 mW/°C in still air"
 timeConstant: "5 s in stirred oil"
 maxPower: "10 mW (at 25 °C)"
 image: ta-4-flex
+pdfUrl: /pdfs/ta-4-flex.pdf
 summary: Flexible-lead variant of the HAT element. PVC-jacket leads rated −40 °C to +105 °C; Teflon leads rated −40 °C to +150 °C. Built for harness-friendly OEM installation.
 ---
 

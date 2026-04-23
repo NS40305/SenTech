@@ -11,6 +11,7 @@ dissipation: "0.7 mW/°C in still air"
 timeConstant: "2 s in stirred oil"
 maxPower: "3.5 mW (at 25 °C)"
 image: tj-thin-film
+pdfUrl: /pdfs/tj-thin-film.pdf
 summary: Ultra-thin 500 µm NTC with superior electrical insulation, safe for ambient contact with electrodes. UL1434 certified, RoHS compliant, easily soldered.
 ---
 

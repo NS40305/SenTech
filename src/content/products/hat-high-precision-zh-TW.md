@@ -11,6 +11,7 @@ dissipation: "2 mW/°C 靜止空氣"
 timeConstant: "3 秒（攪拌油中）"
 maxPower: "10–15 mW（於 25 °C）"
 image: hat-high-precision
+pdfUrl: /pdfs/hat-high-precision.pdf
 summary: HAT 高精度系列具最寬操作溫度範圍（−40 °C 至 +250 °C），是汽車、家電與嚴苛環境 OEM 應用的主力選擇。
 ---
 

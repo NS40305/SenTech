@@ -23,6 +23,7 @@ export interface Props {
     dissipation?: string;
     timeConstant?: string;
     maxPower?: string;
+    pdfUrl?: string;
     image: string;
     summary: string;
   }>;
@@ -55,8 +56,10 @@ const { locale, eyebrow, title, subtitle, viewAllLabel, products } = Astro.props
           dissipation={p.dissipation}
           timeConstant={p.timeConstant}
           maxPower={p.maxPower}
+          pdfUrl={p.pdfUrl}
           image={p.image}
           summary={p.summary}
+          locale={locale}
         />
       ))}
     </div>

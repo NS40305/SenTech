@@ -20,6 +20,11 @@ Total open TBDs: **50** (down from 70 after the verified-spec pass)
 - All 16 product markdown files now carry verified specs (operating range, tolerance, B-value availability, dissipation constant, thermal time constant, max power) sourced from sen-tech.com product pages (HT, HAT, GB, IN, PM, TS, TA-4, TJ series).
 - `(unverified)` markers fully removed from product front-matter.
 - Contact email + phone filled from official site footer; only street address still pending.
+- All 8 per-product datasheet PDFs scraped from sen-tech.com Odoo CMS into `public/pdfs/<slug>.pdf` (~17 MB total). Each product's front-matter now references the local PDF via `pdfUrl`. Re-runnable via `npm run scrape:pdfs`.
+
+## Hero "Download Catalog" CTA
+
+Currently points to `sentech-catalog-placeholder.pdf` (1.5 KB auto-generated). Replace with a real bilingual master catalog when SEN TECH provides one — drop at `public/pdfs/sentech-catalog.pdf` and update `Hero` `catalogPdfUrl`.
 
 ## Owner
 

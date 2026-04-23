@@ -11,6 +11,7 @@ dissipation: "2 mW/°C 靜止空氣；13 mW/°C 攪拌油"
 timeConstant: "0.75 秒（攪拌油中）"
 maxPower: "10 mW（於 25 °C）"
 image: single-point-matched
+pdfUrl: /pdfs/single-point-matched.pdf
 summary: 於指定溫度點精密匹配阻值，適合 HVAC、汽車電子與工業控制等大量量產應用，成本效益高，符合 RoHS。
 ---
 

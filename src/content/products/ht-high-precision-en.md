@@ -11,6 +11,7 @@ dissipation: "2 mW/°C in still air"
 timeConstant: "3 s in stirred oil"
 maxPower: "10–15 mW (at 25 °C)"
 image: ht-high-precision
+pdfUrl: /pdfs/ht-high-precision.pdf
 summary: Low-cost, high-stability HT-series NTC with small B-value tolerance. Ideal for PCB-mounted thermal sensing in instrumentation and appliance controls.
 ---
 

@@ -11,6 +11,7 @@ dissipation: "2 mW/°C 靜止空氣"
 timeConstant: "3 秒（攪拌油中）"
 maxPower: "10–15 mW（於 25 °C）"
 image: ht-high-precision
+pdfUrl: /pdfs/ht-high-precision.pdf
 summary: 低成本、高穩定性的 HT 系列 NTC，具小 B 值公差與精準阻值，適合 PCB 直插式儀器與家電控制熱感測。
 ---
 

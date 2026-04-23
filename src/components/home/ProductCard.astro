@@ -1,4 +1,7 @@
 ---
+import PdfPreview from '../primitives/PdfPreview.astro';
+import type { Locale } from '../../i18n/ui';
+
 export interface Props {
   slug: string;
   family: string;
@@ -10,10 +13,13 @@ export interface Props {
   dissipation?: string;
   timeConstant?: string;
   maxPower?: string;
+  pdfUrl?: string;
   image: string;
   summary: string;
   href?: string;
   ctaLabel?: string;
+  pdfLabel?: string;
+  locale?: Locale;
 }
 
 const {
@@ -27,11 +33,18 @@ const {
   dissipation,
   timeConstant,
   maxPower,
+  pdfUrl,
   image,
   summary,
   href,
   ctaLabel = 'View details',
+  pdfLabel,
+  locale = 'en',
 } = Astro.props;
+
+const pdfTriggerLabel =
+  pdfLabel ?? (locale === 'zh-TW' ? 'PDF 型錄規格下載' : 'PDF Specification');
+const effectivePdfUrl = pdfUrl ?? '/pdfs/sentech-catalog-placeholder.pdf';
 
 type SpecRow = { label: string; value: string; numeric?: boolean; emphasis?: boolean };
 
@@ -83,12 +96,21 @@ const imageSrc = `/images/product-${image}.jpg`;
       )}
     </dl>
 
-    {href && (
-      <a class="product-card__cta" href={href}>
-        {ctaLabel}
-        <span aria-hidden="true">→</span>
-      </a>
-    )}
+    <div class="product-card__actions">
+      <PdfPreview
+        pdfUrl={effectivePdfUrl}
+        triggerLabel={pdfTriggerLabel}
+        modalTitle={`${name} — ${pdfTriggerLabel}`}
+        locale={locale}
+        variant="inline"
+      />
+      {href && (
+        <a class="product-card__cta" href={href}>
+          {ctaLabel}
+          <span aria-hidden="true">→</span>
+        </a>
+      )}
+    </div>
   </div>
 </article>
 
@@ -215,15 +237,22 @@ const imageSrc = `/images/product-${image}.jpg`;
     opacity: 0.7;
   }
 
+  .product-card__actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+    margin-top: var(--space-2);
+    flex-wrap: wrap;
+  }
   .product-card__cta {
     color: var(--color-accent);
     font-weight: 600;
-    font-size: 14px;
+    font-size: 13px;
     text-decoration: none;
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    margin-top: var(--space-2);
   }
   .product-card__cta:hover { text-decoration: underline; }
 

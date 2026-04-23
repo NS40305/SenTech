@@ -11,6 +11,7 @@ dissipation: "0.7 mW/°C 靜止空氣"
 timeConstant: "0.75 秒（攪拌油中）"
 maxPower: "3.5 mW（於 25 °C）"
 image: ts-body-temperature
+pdfUrl: /pdfs/ts-body-temperature.pdf
 summary: 體積小、反應快的 NTC，專為醫療設備與體溫計設計，比 HAT 更小巧，具高可靠度與優異熱循環耐受性。
 ---
 

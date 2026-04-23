@@ -11,6 +11,7 @@ dissipation: "2 mW/°C in still air"
 timeConstant: "3 s in stirred oil"
 maxPower: "10–15 mW (at 25 °C)"
 image: hat-high-precision
+pdfUrl: /pdfs/hat-high-precision.pdf
 summary: HAT-series high-precision NTC with the widest operating range (−40 °C to +250 °C) for automotive, appliance, and harsh-environment OEM use.
 ---
 

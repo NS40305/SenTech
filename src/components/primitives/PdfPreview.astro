@@ -1,0 +1,332 @@
+---
+import { type Locale } from '../../i18n/ui';
+
+export interface Props {
+  pdfUrl: string;
+  triggerLabel: string;
+  modalTitle?: string;
+  downloadLabel?: string;
+  closeLabel?: string;
+  variant?: 'pill' | 'ghost' | 'inline';
+  locale?: Locale;
+  class?: string;
+}
+
+const {
+  pdfUrl,
+  triggerLabel,
+  modalTitle,
+  downloadLabel,
+  closeLabel,
+  variant = 'pill',
+  locale = 'en',
+  class: className,
+} = Astro.props;
+
+const downloadCopy =
+  downloadLabel ?? (locale === 'zh-TW' ? '下載 PDF' : 'Download PDF');
+const closeCopy =
+  closeLabel ?? (locale === 'zh-TW' ? '關閉' : 'Close');
+const titleCopy = modalTitle ?? triggerLabel;
+
+const filename = pdfUrl.split('/').pop() ?? 'document.pdf';
+---
+<div class={`pdf-preview pdf-preview--${variant}`} data-pdf-root>
+  <button
+    type="button"
+    class={['pdf-trigger', className].filter(Boolean).join(' ')}
+    data-pdf-open
+    data-pdf-src={pdfUrl}
+    data-pdf-title={titleCopy}
+    aria-haspopup="dialog"
+  >
+    <svg
+      class="pdf-trigger__icon"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.6"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      aria-hidden="true"
+      width="18"
+      height="18"
+    >
+      <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z" />
+      <polyline points="14 3 14 8 19 8" />
+      <path d="M9 13h1.5a1.5 1.5 0 0 1 0 3H9zM9 13v6" />
+      <path d="M14 13h1a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2h-1z" />
+    </svg>
+    <span>{triggerLabel}</span>
+  </button>
+
+  <dialog class="pdf-modal" data-pdf-dialog aria-labelledby="pdf-modal-title">
+    <div class="pdf-modal__inner">
+      <header class="pdf-modal__header">
+        <h3 class="pdf-modal__title" id="pdf-modal-title">{titleCopy}</h3>
+        <div class="pdf-modal__actions">
+          <a
+            class="pdf-modal__download"
+            href={pdfUrl}
+            download={filename}
+            rel="noopener"
+          >
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+              <path d="M12 4v12" stroke-linecap="round" />
+              <path d="M6 12l6 6 6-6" stroke-linecap="round" stroke-linejoin="round" />
+              <path d="M4 20h16" stroke-linecap="round" />
+            </svg>
+            <span>{downloadCopy}</span>
+          </a>
+          <button
+            type="button"
+            class="pdf-modal__close"
+            data-pdf-close
+            aria-label={closeCopy}
+          >
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+              <path d="M6 6l12 12M18 6L6 18" />
+            </svg>
+          </button>
+        </div>
+      </header>
+
+      <div class="pdf-modal__body">
+        <iframe
+          class="pdf-modal__frame"
+          data-pdf-frame
+          title={titleCopy}
+          loading="lazy"
+        ></iframe>
+
+        <noscript>
+          <p class="pdf-modal__fallback">
+            <a href={pdfUrl} target="_blank" rel="noopener">{downloadCopy}</a>
+          </p>
+        </noscript>
+      </div>
+
+      <footer class="pdf-modal__footer">
+        <span class="pdf-modal__hint">
+          {locale === 'zh-TW'
+            ? '若預覽無法載入，請使用上方下載按鈕。'
+            : 'If the preview does not load, use the download button above.'}
+        </span>
+      </footer>
+    </div>
+  </dialog>
+</div>
+
+<script>
+  type Root = HTMLElement;
+
+  function setup(root: Root) {
+    const trigger = root.querySelector<HTMLButtonElement>('[data-pdf-open]');
+    const dialog = root.querySelector<HTMLDialogElement>('[data-pdf-dialog]');
+    const frame = root.querySelector<HTMLIFrameElement>('[data-pdf-frame]');
+    const closeBtn = root.querySelector<HTMLButtonElement>('[data-pdf-close]');
+    if (!trigger || !dialog || !frame) return;
+
+    const src = trigger.dataset.pdfSrc ?? '';
+
+    function open() {
+      if (frame && !frame.src) frame.src = src;
+      if (dialog && typeof dialog.showModal === 'function') {
+        dialog.showModal();
+      } else if (dialog) {
+        dialog.setAttribute('open', '');
+      }
+      document.body.style.overflow = 'hidden';
+    }
+
+    function close() {
+      if (dialog && typeof dialog.close === 'function') {
+        dialog.close();
+      } else if (dialog) {
+        dialog.removeAttribute('open');
+      }
+      document.body.style.overflow = '';
+    }
+
+    trigger.addEventListener('click', open);
+    closeBtn?.addEventListener('click', close);
+
+    dialog.addEventListener('click', (event) => {
+      const rect = (event.target as HTMLElement).getBoundingClientRect?.();
+      if (event.target === dialog) close();
+      else if (rect && (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom)) {
+        close();
+      }
+    });
+
+    dialog.addEventListener('cancel', () => {
+      document.body.style.overflow = '';
+    });
+  }
+
+  document.querySelectorAll<Root>('[data-pdf-root]').forEach(setup);
+</script>
+
+<style>
+  .pdf-preview { display: inline-flex; }
+
+  /* Trigger button — pill outlined cyan (matches reference screenshot) */
+  .pdf-trigger {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-body);
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1;
+    padding: 10px 22px;
+    color: var(--color-accent);
+    background: transparent;
+    border: 1.6px solid var(--color-accent);
+    border-radius: var(--radius-pill);
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color var(--duration-fast) var(--easing-base),
+      color var(--duration-fast) var(--easing-base),
+      border-color var(--duration-fast) var(--easing-base);
+  }
+  .pdf-trigger:hover {
+    background: var(--color-accent);
+    color: #fff;
+  }
+  .pdf-trigger:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 166, 192, 0.3);
+  }
+  .pdf-trigger__icon { flex-shrink: 0; }
+
+  .pdf-preview--ghost .pdf-trigger {
+    border: none;
+    padding: 6px 0;
+    color: var(--color-accent);
+    background: transparent;
+  }
+  .pdf-preview--ghost .pdf-trigger:hover {
+    background: transparent;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+
+  .pdf-preview--inline .pdf-trigger {
+    padding: 8px 14px;
+    font-size: 13px;
+    border-width: 1.4px;
+  }
+
+  /* Modal */
+  .pdf-modal {
+    width: min(94vw, 960px);
+    max-width: 94vw;
+    height: min(90vh, 900px);
+    padding: 0;
+    border: 1px solid var(--color-stroke);
+    border-radius: var(--radius-card);
+    background: #fff;
+    color: var(--color-carbon);
+    overflow: hidden;
+    box-shadow: 0 24px 64px rgba(14, 42, 71, 0.32);
+  }
+  .pdf-modal::backdrop {
+    background: rgba(14, 42, 71, 0.7);
+    backdrop-filter: blur(4px);
+  }
+  .pdf-modal__inner {
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    height: 100%;
+  }
+  .pdf-modal__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+    padding: var(--space-3) var(--space-4);
+    border-bottom: 1px solid var(--color-stroke);
+    background: var(--color-surface);
+  }
+  .pdf-modal__title {
+    font-family: var(--font-display);
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--color-primary);
+    margin: 0;
+    line-height: 1.3;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .pdf-modal__actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    flex-shrink: 0;
+  }
+  .pdf-modal__download {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--color-accent);
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    padding: 8px 14px;
+    border-radius: var(--radius-button);
+    line-height: 1;
+    transition: background-color var(--duration-fast) var(--easing-base);
+  }
+  .pdf-modal__download:hover { background: var(--color-primary); }
+  .pdf-modal__close {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background: transparent;
+    border: 1px solid var(--color-stroke);
+    border-radius: var(--radius-button);
+    color: var(--color-text-body);
+    cursor: pointer;
+    transition: background-color var(--duration-fast) var(--easing-base),
+      color var(--duration-fast) var(--easing-base);
+  }
+  .pdf-modal__close:hover {
+    background: var(--color-surface-alt);
+    color: var(--color-primary);
+  }
+  .pdf-modal__body {
+    position: relative;
+    background: var(--color-surface-alt);
+    overflow: hidden;
+  }
+  .pdf-modal__frame {
+    width: 100%;
+    height: 100%;
+    border: 0;
+    background: #fff;
+    display: block;
+  }
+  .pdf-modal__fallback {
+    padding: var(--space-4);
+    font-size: 14px;
+    color: var(--color-text-body);
+  }
+  .pdf-modal__fallback a {
+    color: var(--color-accent);
+    font-weight: 600;
+  }
+  .pdf-modal__footer {
+    padding: 8px var(--space-4);
+    border-top: 1px solid var(--color-stroke);
+    background: var(--color-surface);
+  }
+  .pdf-modal__hint {
+    font-size: 12px;
+    color: var(--color-text-muted);
+  }
+</style>

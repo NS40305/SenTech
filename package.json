@@ -15,7 +15,9 @@
     "test:ui": "vitest --ui",
     "format": "prettier --write \"src/**/*.{ts,astro,md,json}\"",
     "format:check": "prettier --check \"src/**/*.{ts,astro,md,json}\"",
-    "tbd": "node tools/check-tbd.mjs"
+    "tbd": "node tools/check-tbd.mjs",
+    "scrape:pdfs": "node tools/scrape-sentech-pdfs.mjs",
+    "scrape:images": "node tools/scrape-sentech-images.mjs"
   },
   "dependencies": {
     "@fontsource/inter": "^5.2.8",

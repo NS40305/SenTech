@@ -1,6 +1,7 @@
 ---
 import Container from '../layout/Container.astro';
 import Button from '../primitives/Button.astro';
+import PdfPreview from '../primitives/PdfPreview.astro';
 import { localizedPath, type Locale } from '../../i18n/ui';
 
 export interface Props {
@@ -10,6 +11,7 @@ export interface Props {
   ctaPrimaryLabel: string;
   ctaSecondaryLabel: string;
   heroImage?: string;
+  catalogPdfUrl?: string;
   stats?: Array<{ value: string; suffix?: string; label: string }>;
 }
 
@@ -20,17 +22,39 @@ const {
   ctaPrimaryLabel,
   ctaSecondaryLabel,
   heroImage = '/images/hero-1.jpg',
+  catalogPdfUrl = '/pdfs/sentech-catalog-placeholder.pdf',
   stats = [],
 } = Astro.props;
+
+const catalogModalTitle =
+  locale === 'zh-TW' ? 'SEN TECH 產品型錄' : 'SEN TECH Product Catalog';
 ---
-<section class="hero" style={`--hero-bg: url('${heroImage}')`}>
-  <div class="hero__bg" aria-hidden="true"></div>
+<section class="hero">
+  <div class="hero__media" aria-hidden="true">
+    <img
+      class="hero__media-img"
+      src={heroImage}
+      alt=""
+      loading="eager"
+      decoding="async"
+      fetchpriority="high"
+      width="768"
+      height="600"
+    />
+    <div class="hero__media-scrim"></div>
+  </div>
   <Container class="hero__content">
     <h1 class="hero__headline">{headline}</h1>
     <p class="hero__subhead">{subhead}</p>
     <div class="hero__ctas">
       <Button variant="primary" href={localizedPath(locale, '/contact')}>{ctaPrimaryLabel}</Button>
-      <Button variant="secondary" href="#products">{ctaSecondaryLabel}</Button>
+      <PdfPreview
+        pdfUrl={catalogPdfUrl}
+        triggerLabel={ctaSecondaryLabel}
+        modalTitle={catalogModalTitle}
+        locale={locale}
+        class="hero__pdf-trigger"
+      />
     </div>
     {stats.length > 0 && (
       <ul class="hero__stats">
@@ -48,29 +72,43 @@ const {
 <style>
   .hero {
     position: relative;
-    min-height: 600px;
-    display: flex;
-    align-items: center;
+    background: var(--color-primary);
     color: #fff;
     overflow: hidden;
     isolation: isolate;
+    min-height: clamp(440px, 70vh, 760px);
+    display: flex;
+    align-items: center;
   }
-  .hero__bg {
+  .hero__media {
     position: absolute;
     inset: 0;
-    background-image: var(--hero-bg);
-    background-size: cover;
-    background-position: center;
-    z-index: -1;
+    z-index: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
-  .hero__bg::after {
-    content: '';
+  .hero__media-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center bottom;
+    display: block;
+  }
+  .hero__media-scrim {
     position: absolute;
     inset: 0;
-    background: linear-gradient(rgba(14, 42, 71, 0.78), rgba(14, 42, 71, 0.62));
+    background:
+      linear-gradient(180deg,
+        rgba(14, 42, 71, 0.85) 0%,
+        rgba(14, 42, 71, 0.55) 35%,
+        rgba(14, 42, 71, 0.18) 65%,
+        rgba(14, 42, 71, 0) 100%);
+    pointer-events: none;
   }
   .hero__content {
     position: relative;
+    z-index: 1;
     padding-block: var(--space-7);
     max-width: 880px;
   }
@@ -106,6 +144,17 @@ const {
     color: var(--color-primary);
     border-color: #fff;
   }
+  .hero__ctas :global(.hero__pdf-trigger) {
+    color: #fff;
+    border-color: rgba(255, 255, 255, 0.6);
+    height: 48px;
+    padding: 0 24px;
+  }
+  .hero__ctas :global(.hero__pdf-trigger:hover) {
+    background: #fff;
+    color: var(--color-primary);
+    border-color: #fff;
+  }
   .hero__stats {
     list-style: none;
     display: flex;
@@ -132,7 +181,21 @@ const {
     color: rgba(255, 255, 255, 0.7);
   }
   @media (min-width: 768px) {
-    .hero { min-height: 680px; }
     .hero__content { padding-block: var(--space-8); }
+  }
+  @media (min-width: 1280px) {
+    .hero__media-img { object-position: right bottom; }
+    .hero__media-scrim {
+      background:
+        linear-gradient(95deg,
+          rgba(14, 42, 71, 0.95) 0%,
+          rgba(14, 42, 71, 0.78) 35%,
+          rgba(14, 42, 71, 0.32) 65%,
+          rgba(14, 42, 71, 0.05) 100%),
+        linear-gradient(180deg,
+          rgba(14, 42, 71, 0.55) 0%,
+          rgba(14, 42, 71, 0.1) 60%,
+          rgba(14, 42, 71, 0) 100%);
+    }
   }
 </style>

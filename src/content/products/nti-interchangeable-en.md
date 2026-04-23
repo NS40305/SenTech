@@ -10,6 +10,7 @@ bValue: "B25/85: 3435K, 3535K, 3695K, 3942K, 3977K, 4262K"
 dissipation: "2 mW/°C still air; 13 mW/°C stirred oil"
 timeConstant: "0.75 s in stirred oil"
 image: nti-interchangeable
+pdfUrl: /pdfs/nti-interchangeable.pdf
 summary: Epoxy-coated interchangeable NTC with curve-matched accuracy down to ±0.10 °C, R25 1–100 kΩ. UL 1434 (IN-A010K) and RoHS compliant.
 ---
 

@@ -10,6 +10,7 @@ bValue: "B25/85：3435K、3535K、3695K、3942K、3977K、4262K"
 dissipation: "2 mW/°C 靜止空氣；13 mW/°C 攪拌油"
 timeConstant: "0.75 秒（攪拌油中）"
 image: nti-interchangeable
+pdfUrl: /pdfs/nti-interchangeable.pdf
 summary: 環氧樹脂封裝可互換型 NTC，曲線匹配精度可達 ±0.10 °C，R25 範圍 1–100 kΩ，符合 UL 1434（IN-A010K）與 RoHS 規範。
 ---
 
