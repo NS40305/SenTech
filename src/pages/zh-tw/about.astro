@@ -1,0 +1,178 @@
+---
+import { getEntry } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SiteHeader from '../../components/layout/SiteHeader.astro';
+import SiteFooter from '../../components/layout/SiteFooter.astro';
+import FloatingRfqButton from '../../components/layout/FloatingRfqButton.astro';
+import Section from '../../components/layout/Section.astro';
+import Container from '../../components/layout/Container.astro';
+import Eyebrow from '../../components/primitives/Eyebrow.astro';
+import PageHero from '../../components/primitives/PageHero.astro';
+import Button from '../../components/primitives/Button.astro';
+import MilestoneTimeline from '../../components/home/MilestoneTimeline.astro';
+import CertificationStrip from '../../components/home/CertificationStrip.astro';
+import { localizedPath, t } from '../../i18n/ui';
+
+const locale = 'zh-TW' as const;
+const milestones = await getEntry('milestones', 'milestones-zh-tw');
+const certs = await getEntry('certifications', 'certifications');
+const settings = await getEntry('settings', 'settings-zh-tw');
+const contact = settings?.data.contact;
+
+const isReal = (s?: string) => Boolean(s) && !s!.startsWith('[TBD');
+---
+<BaseLayout
+  title="關於業達 SEN TECH — 三十年精密感測製造"
+  description={t(locale, 'page.about.sub')}
+  locale={locale}
+  path="/zh-tw/about"
+>
+  <SiteHeader slot="header" locale={locale} />
+
+  <PageHero
+    eyebrow={t(locale, 'page.about.eyebrow')}
+    title={t(locale, 'page.about.title')}
+    subtitle={t(locale, 'page.about.sub')}
+  />
+
+  <Section surface="white">
+    <Container>
+      <div class="vm">
+        <div class="vm__intro">
+          <Eyebrow>關於業達</Eyebrow>
+          <h2 class="vm__title">是您的精密感測夥伴，不只是型錄供應商。</h2>
+          <p class="vm__body">業達科技於 1994 年在台灣成立，專精 NTC 熱敏電阻製造。三十年來我們仍掌握從原料氧化物到成品感測器的每個製程，產品出口至全球 20+ 國家的家電、汽車電子與 3C 電子 OEM 廠商。客戶持續回購，是因為我們與您一起設計，而非只是販售既有規格。</p>
+        </div>
+        <div class="vm__cards">
+          <div class="vm__card">
+            <Eyebrow class="vm__card-eyebrow">{t(locale, 'page.about.visionTitle')}</Eyebrow>
+            <p class="vm__card-text">{t(locale, 'page.about.vision')}</p>
+          </div>
+          <div class="vm__card vm__card--accent">
+            <Eyebrow class="vm__card-eyebrow">{t(locale, 'page.about.missionTitle')}</Eyebrow>
+            <p class="vm__card-text">{t(locale, 'page.about.mission')}</p>
+          </div>
+        </div>
+      </div>
+    </Container>
+  </Section>
+
+  {milestones && (
+    <MilestoneTimeline
+      eyebrow="重要里程碑"
+      title="三十年精密感測製造經驗"
+      body="從 1994 年單一 NTC 熱敏電阻產線，發展至今八大量產系列。"
+      items={milestones.data.items}
+    />
+  )}
+
+  {certs && (
+    <CertificationStrip
+      eyebrow="認證"
+      title="品質系統與合規框架"
+      items={certs.data.items}
+    />
+  )}
+
+  {contact && (isReal(contact.email) || isReal(contact.phone)) && (
+    <Section surface="navy" paddingY="tight">
+      <Container>
+        <div class="contact-strip">
+          <div class="contact-strip__lead">
+            <Eyebrow class="contact-strip__eyebrow">聯絡我們</Eyebrow>
+            <h2 class="contact-strip__title">準備好討論您的感測專案？</h2>
+          </div>
+          <ul class="contact-strip__list">
+            {isReal(contact.email) && (
+              <li>
+                <span>電子郵件</span>
+                <a href={`mailto:${contact.email}`}>{contact.email}</a>
+              </li>
+            )}
+            {isReal(contact.phone) && (
+              <li>
+                <span>電話</span>
+                <a href={`tel:${contact.phone.replace(/[^+\d]/g, '')}`}>{contact.phone}</a>
+              </li>
+            )}
+          </ul>
+          <Button variant="primary" href={localizedPath(locale, '/contact')} class="contact-strip__cta">
+            {t(locale, 'cta.sendInquiry')}
+          </Button>
+        </div>
+      </Container>
+    </Section>
+  )}
+
+  <SiteFooter slot="footer" locale={locale} />
+  <FloatingRfqButton locale={locale} />
+</BaseLayout>
+
+<style>
+  .vm { display: grid; grid-template-columns: 1fr; gap: var(--space-6); }
+  .vm__intro { display: flex; flex-direction: column; gap: var(--space-3); max-width: 60ch; }
+  .vm__title {
+    font-family: var(--font-display);
+    font-size: clamp(26px, 3vw, 36px);
+    color: var(--color-primary); line-height: 1.2;
+  }
+  .vm__body {
+    font-size: 16px; color: var(--color-text-body); line-height: 1.6;
+  }
+  .vm__cards {
+    display: grid; grid-template-columns: 1fr; gap: var(--space-3);
+  }
+  .vm__card {
+    background: var(--color-surface); border: 1px solid var(--color-stroke);
+    border-radius: var(--radius-card); padding: var(--space-5);
+    display: flex; flex-direction: column; gap: var(--space-3);
+  }
+  .vm__card--accent {
+    background: var(--color-primary); color: #fff; border-color: var(--color-primary);
+  }
+  .vm__card :global(.vm__card-eyebrow) {
+    color: var(--color-accent);
+  }
+  .vm__card-text {
+    font-family: var(--font-display);
+    font-size: 18px; line-height: 1.45;
+    color: var(--color-primary); font-weight: 500;
+  }
+  .vm__card--accent .vm__card-text { color: #fff; }
+
+  @media (min-width: 1024px) {
+    .vm { grid-template-columns: minmax(0, 6fr) minmax(0, 6fr); gap: var(--space-7); align-items: start; }
+  }
+
+  .contact-strip {
+    display: grid; grid-template-columns: 1fr; gap: var(--space-4);
+    align-items: center;
+  }
+  .contact-strip__lead :global(.contact-strip__eyebrow) { color: var(--color-accent); }
+  .contact-strip__title {
+    font-family: var(--font-display); color: #fff;
+    font-size: clamp(22px, 2.6vw, 28px); line-height: 1.2;
+    margin-top: var(--space-2);
+  }
+  .contact-strip__list {
+    list-style: none; padding: 0; margin: 0;
+    display: flex; flex-direction: column; gap: var(--space-2);
+  }
+  .contact-strip__list li {
+    display: flex; flex-direction: column; gap: 2px;
+  }
+  .contact-strip__list span {
+    font-size: 11px; color: rgba(255,255,255,0.6);
+    text-transform: uppercase; letter-spacing: 0.08em; font-weight: 600;
+  }
+  .contact-strip__list a {
+    color: #fff; font-weight: 600; text-decoration: none; font-size: 16px;
+  }
+  .contact-strip__list a:hover { color: var(--color-accent); }
+  .contact-strip__cta {
+    justify-self: start;
+  }
+  @media (min-width: 1024px) {
+    .contact-strip { grid-template-columns: minmax(0, 6fr) minmax(0, 4fr) auto; gap: var(--space-7); }
+  }
+</style>

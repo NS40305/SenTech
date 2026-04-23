@@ -1,0 +1,198 @@
+---
+import { getEntry } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SiteHeader from '../../components/layout/SiteHeader.astro';
+import SiteFooter from '../../components/layout/SiteFooter.astro';
+import FloatingRfqButton from '../../components/layout/FloatingRfqButton.astro';
+import Section from '../../components/layout/Section.astro';
+import Container from '../../components/layout/Container.astro';
+import Eyebrow from '../../components/primitives/Eyebrow.astro';
+import PageHero from '../../components/primitives/PageHero.astro';
+import OemWorkflow from '../../components/home/OemWorkflow.astro';
+import RfqSection from '../../components/home/RfqSection.astro';
+import { t } from '../../i18n/ui';
+
+const locale = 'zh-TW' as const;
+const home = await getEntry('home', 'home-zh-tw');
+const oem = home?.data.oem;
+
+const capabilities = [
+  {
+    title: '曲線與 B 值匹配',
+    body: '提供目標 R/T 曲線、B 值或競品料號，工程團隊可挑選最接近的庫存元件，或於廠內設計新的晶片配方。',
+  },
+  {
+    title: '機構客製化',
+    body: '引線材料（PVC／鐵氟龍／矽膠）、引線直徑與長度、套管、連接器或線束終端，皆可依需求設計，並提供可量產的機構圖供審閱。',
+  },
+  {
+    title: '公差等級',
+    body: '±0.10 °C 可互換、±1% 單點匹配、±5% 高量產等多種等級，可混搭以最佳化 BOM 成本。',
+  },
+  {
+    title: '驗證支援',
+    body: '提供現場或實驗室驗證，含熱循環、振動、濕度、老化測試。可依需求提供 AEC-Q200 與 IATF 16949 文件包。',
+  },
+  {
+    title: '從晶片到感測器全製程',
+    body: 'NTC 晶片、元件組裝、封裝、校驗、成品包裝——全程於台灣自主完成。單一供應商，單一責任點。',
+  },
+  {
+    title: '量產彈性',
+    body: '試樣量（≤100）支援開發；驗證樣品 5 個工作天交付；量產依您的預測與包裝需求調整。',
+  },
+];
+
+const slas = [
+  { value: '5', unit: '工作天', label: '可行性評估' },
+  { value: '10–20', unit: '工作天', label: '首批驗證樣品' },
+  { value: '4–6', unit: '週', label: '量產爬坡' },
+];
+---
+<BaseLayout
+  title="OEM 服務與客製化 — 業達科技"
+  description={t(locale, 'page.oem.sub')}
+  locale={locale}
+  path="/zh-tw/oem"
+>
+  <SiteHeader slot="header" locale={locale} />
+
+  <PageHero
+    eyebrow={t(locale, 'page.oem.eyebrow')}
+    title={t(locale, 'page.oem.title')}
+    subtitle={t(locale, 'page.oem.sub')}
+  />
+
+  {oem && (
+    <OemWorkflow
+      locale={locale}
+      eyebrow={oem.eyebrow}
+      title={oem.title}
+      body={oem.body}
+      steps={oem.steps}
+      leadTimeNote={oem.leadTimeNote}
+      ctaLabel={oem.ctaLabel}
+    />
+  )}
+
+  <Section surface="mist">
+    <Container>
+      <header class="cap__header">
+        <Eyebrow>核心能力</Eyebrow>
+        <h2 class="cap__title">業達為 OEM 客製化的六個面向</h2>
+        <p class="cap__sub">不要求您去配合既有規格，而是讓我們的工程能力配合您的設計需求。</p>
+      </header>
+      <ul class="cap__grid">
+        {capabilities.map((c, i) => (
+          <li class="cap__item">
+            <span class="cap__num">{String(i + 1).padStart(2, '0')}</span>
+            <h3 class="cap__item-title">{c.title}</h3>
+            <p class="cap__item-body">{c.body}</p>
+          </li>
+        ))}
+      </ul>
+    </Container>
+  </Section>
+
+  <Section surface="navy" paddingY="tight">
+    <Container>
+      <div class="sla">
+        <div class="sla__intro">
+          <Eyebrow class="sla__eyebrow">交期 SLA</Eyebrow>
+          <h2 class="sla__title">工程師親自回覆，非自動化銷售訊息。</h2>
+        </div>
+        <ul class="sla__grid">
+          {slas.map((s) => (
+            <li>
+              <span class="sla__value">{s.value}</span>
+              <span class="sla__unit">{s.unit}</span>
+              <span class="sla__label">{s.label}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </Container>
+  </Section>
+
+  <RfqSection
+    locale={locale}
+    eyebrow="啟動 OEM 專案"
+    bullets={[
+      '提供目標規格 / 機構圖 / 料號',
+      '一個工作天內由業達工程師回覆',
+      '5 個工作天內提供樣品',
+    ]}
+  />
+
+  <SiteFooter slot="footer" locale={locale} />
+  <FloatingRfqButton locale={locale} />
+</BaseLayout>
+
+<style>
+  .cap__header {
+    display: flex; flex-direction: column; gap: var(--space-3);
+    max-width: 64ch; margin-bottom: var(--space-6);
+  }
+  .cap__title {
+    font-family: var(--font-display);
+    font-size: clamp(26px, 3vw, 36px);
+    color: var(--color-primary);
+    line-height: 1.2;
+  }
+  .cap__sub {
+    font-size: 16px; color: var(--color-text-body); line-height: 1.6;
+  }
+  .cap__grid {
+    list-style: none; padding: 0; margin: 0;
+    display: grid; grid-template-columns: 1fr; gap: var(--space-4);
+  }
+  .cap__item {
+    background: #fff; border: 1px solid var(--color-stroke);
+    border-radius: var(--radius-card); padding: var(--space-4);
+    display: flex; flex-direction: column; gap: var(--space-2);
+    transition: border-color var(--duration-fast) var(--easing-base);
+  }
+  .cap__item:hover { border-color: var(--color-accent); }
+  .cap__num {
+    font-family: var(--font-mono); font-size: 22px; font-weight: 700;
+    color: var(--color-accent); letter-spacing: -0.02em;
+  }
+  .cap__item-title {
+    font-family: var(--font-display); font-size: 18px; font-weight: 700;
+    color: var(--color-primary); line-height: 1.3;
+  }
+  .cap__item-body {
+    font-size: 14px; color: var(--color-text-body); line-height: 1.55;
+  }
+  @media (min-width: 768px) {
+    .cap__grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (min-width: 1024px) {
+    .cap__grid { grid-template-columns: repeat(3, 1fr); gap: var(--space-5); }
+  }
+
+  .sla { display: grid; grid-template-columns: 1fr; gap: var(--space-5); align-items: center; }
+  .sla__intro :global(.sla__eyebrow) { color: var(--color-accent); }
+  .sla__title {
+    font-family: var(--font-display); color: #fff;
+    font-size: clamp(22px, 2.6vw, 30px); line-height: 1.2; margin-top: var(--space-2);
+  }
+  .sla__grid {
+    list-style: none; padding: 0; margin: 0;
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-3);
+  }
+  .sla__grid li { display: flex; flex-direction: column; gap: 2px; }
+  .sla__value {
+    font-family: var(--font-mono); font-size: clamp(28px, 3.6vw, 38px);
+    font-weight: 700; color: #fff; line-height: 1;
+  }
+  .sla__unit {
+    font-size: 12px; color: var(--color-accent); text-transform: uppercase; letter-spacing: 0.08em;
+  }
+  .sla__label {
+    font-size: 13px; color: rgba(255,255,255,0.78); margin-top: var(--space-2);
+  }
+  @media (min-width: 1024px) {
+    .sla { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: var(--space-7); }
+  }
+</style>

@@ -1,0 +1,191 @@
+---
+import { getEntry } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SiteHeader from '../../components/layout/SiteHeader.astro';
+import SiteFooter from '../../components/layout/SiteFooter.astro';
+import FloatingRfqButton from '../../components/layout/FloatingRfqButton.astro';
+import Section from '../../components/layout/Section.astro';
+import Container from '../../components/layout/Container.astro';
+import Eyebrow from '../../components/primitives/Eyebrow.astro';
+import PageHero from '../../components/primitives/PageHero.astro';
+import ManufacturingDiagram from '../../components/home/ManufacturingDiagram.astro';
+import CertificationStrip from '../../components/home/CertificationStrip.astro';
+import RfqSection from '../../components/home/RfqSection.astro';
+import { t } from '../../i18n/ui';
+
+const locale = 'zh-TW' as const;
+const home = await getEntry('home', 'home-zh-tw');
+const certs = await getEntry('certifications', 'certifications');
+const manufacturing = home?.data.manufacturing;
+
+const integrationPillars = [
+  {
+    title: '原料到晶片',
+    body: '原料氧化物配方與壓製皆於廠內完成。燒結曲線依 R/T 曲線目標微調——配方掌握在自家手中，而非第三方晶片廠。',
+  },
+  {
+    title: '晶片到元件',
+    body: '引線焊接、封裝與修整於台灣校準產線完成。良率與公差工程師能直接掌握，不會因外包而失去能見度。',
+  },
+  {
+    title: '元件到成品感測器',
+    body: '探頭組裝、線束終端與最終校驗全程於同一廠內完成。每批出貨前皆依客戶 R/T 目標逐批驗證。',
+  },
+];
+
+const advantages = [
+  { value: '<5', unit: '工作天', label: '樣品交期' },
+  { value: '±1', unit: '%', label: '最緊公差' },
+  { value: '−50 至 +250', unit: '°C', label: '操作溫度範圍' },
+  { value: '8', unit: '產品線', label: '量產 NTC 系列' },
+];
+---
+<BaseLayout
+  title="製造能力 — 從晶片到感測器全程自主生產 — 業達科技"
+  description={t(locale, 'page.manufacturing.sub')}
+  locale={locale}
+  path="/zh-tw/manufacturing"
+>
+  <SiteHeader slot="header" locale={locale} />
+
+  <PageHero
+    eyebrow={t(locale, 'page.manufacturing.eyebrow')}
+    title={t(locale, 'page.manufacturing.title')}
+    subtitle={t(locale, 'page.manufacturing.sub')}
+  />
+
+  <Section surface="white">
+    <Container>
+      <div class="vi">
+        <div class="vi__intro">
+          <Eyebrow>垂直整合</Eyebrow>
+          <h2 class="vi__title">三道生產階段，同一個廠房。</h2>
+          <p class="vi__sub">多數 NTC 廠商於市場購買晶片再組裝，業達自主掌握全程——原料配方、晶片燒結、元件組裝、成品感測器校驗——皆於台灣廠內完成。</p>
+        </div>
+        <ul class="vi__pillars">
+          {integrationPillars.map((p, i) => (
+            <li class="vi__pillar">
+              <span class="vi__pillar-num">{String(i + 1).padStart(2, '0')}</span>
+              <h3>{p.title}</h3>
+              <p>{p.body}</p>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </Container>
+  </Section>
+
+  {manufacturing && (
+    <ManufacturingDiagram
+      eyebrow="生產線"
+      title={manufacturing.title}
+      body={manufacturing.body}
+      tiles={manufacturing.tiles}
+    />
+  )}
+
+  <Section surface="mist">
+    <Container>
+      <header class="adv__header">
+        <Eyebrow>垂直整合的價值</Eyebrow>
+        <h2 class="adv__title">轉換為實際可量化的優勢。</h2>
+      </header>
+      <ul class="adv__grid">
+        {advantages.map((a) => (
+          <li>
+            <div class="adv__value">{a.value}<span class="adv__unit">{a.unit}</span></div>
+            <div class="adv__label">{a.label}</div>
+          </li>
+        ))}
+      </ul>
+    </Container>
+  </Section>
+
+  {certs && (
+    <CertificationStrip
+      eyebrow="品質系統"
+      title="我們的產品依循的認證與合規框架"
+      items={certs.data.items}
+    />
+  )}
+
+  <RfqSection
+    locale={locale}
+    eyebrow="想參觀廠區？"
+    bullets={[
+      '可安排線上線路導覽',
+      '預約現場參觀皆歡迎',
+      '可提供品質文件包',
+    ]}
+  />
+
+  <SiteFooter slot="footer" locale={locale} />
+  <FloatingRfqButton locale={locale} />
+</BaseLayout>
+
+<style>
+  .vi { display: grid; grid-template-columns: 1fr; gap: var(--space-6); }
+  .vi__intro { display: flex; flex-direction: column; gap: var(--space-3); max-width: 60ch; }
+  .vi__title {
+    font-family: var(--font-display);
+    font-size: clamp(26px, 3vw, 36px);
+    line-height: 1.2; color: var(--color-primary);
+  }
+  .vi__sub {
+    font-size: 16px; color: var(--color-text-body); line-height: 1.6;
+  }
+  .vi__pillars {
+    list-style: none; padding: 0; margin: 0;
+    display: grid; grid-template-columns: 1fr; gap: var(--space-3);
+  }
+  .vi__pillar {
+    background: var(--color-surface); border: 1px solid var(--color-stroke);
+    border-radius: var(--radius-card); padding: var(--space-4);
+    display: flex; flex-direction: column; gap: var(--space-2);
+  }
+  .vi__pillar-num {
+    font-family: var(--font-mono); font-size: 18px; font-weight: 700;
+    color: var(--color-accent);
+  }
+  .vi__pillar h3 {
+    font-family: var(--font-display); font-size: 16px; font-weight: 700;
+    color: var(--color-primary); line-height: 1.3;
+  }
+  .vi__pillar p {
+    font-size: 14px; color: var(--color-text-body); line-height: 1.55;
+  }
+  @media (min-width: 1024px) {
+    .vi { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: var(--space-7); align-items: start; }
+  }
+
+  .adv__header { display: flex; flex-direction: column; gap: var(--space-2); margin-bottom: var(--space-5); max-width: 64ch; }
+  .adv__title {
+    font-family: var(--font-display);
+    font-size: clamp(22px, 2.6vw, 30px);
+    color: var(--color-primary); line-height: 1.2;
+  }
+  .adv__grid {
+    list-style: none; padding: 0; margin: 0;
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-4);
+  }
+  .adv__grid li {
+    background: #fff; border: 1px solid var(--color-stroke);
+    border-radius: var(--radius-card); padding: var(--space-4);
+    display: flex; flex-direction: column; gap: var(--space-2);
+  }
+  .adv__value {
+    font-family: var(--font-mono); font-size: clamp(28px, 3vw, 36px);
+    font-weight: 700; color: var(--color-primary); line-height: 1;
+    display: inline-flex; align-items: baseline;
+  }
+  .adv__unit {
+    font-size: 0.55em; color: var(--color-accent); margin-left: 4px;
+  }
+  .adv__label {
+    font-size: 13px; color: var(--color-text-muted);
+    text-transform: uppercase; letter-spacing: 0.06em;
+  }
+  @media (min-width: 768px) {
+    .adv__grid { grid-template-columns: repeat(4, 1fr); }
+  }
+</style>

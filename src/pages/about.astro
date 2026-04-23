@@ -1,0 +1,178 @@
+---
+import { getEntry } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SiteHeader from '../components/layout/SiteHeader.astro';
+import SiteFooter from '../components/layout/SiteFooter.astro';
+import FloatingRfqButton from '../components/layout/FloatingRfqButton.astro';
+import Section from '../components/layout/Section.astro';
+import Container from '../components/layout/Container.astro';
+import Eyebrow from '../components/primitives/Eyebrow.astro';
+import PageHero from '../components/primitives/PageHero.astro';
+import Button from '../components/primitives/Button.astro';
+import MilestoneTimeline from '../components/home/MilestoneTimeline.astro';
+import CertificationStrip from '../components/home/CertificationStrip.astro';
+import { localizedPath, t } from '../i18n/ui';
+
+const locale = 'en' as const;
+const milestones = await getEntry('milestones', 'milestones-en');
+const certs = await getEntry('certifications', 'certifications');
+const settings = await getEntry('settings', 'settings-en');
+const contact = settings?.data.contact;
+
+const isReal = (s?: string) => Boolean(s) && !s!.startsWith('[TBD');
+---
+<BaseLayout
+  title="About SEN TECH — Precision Sensing Since 1994"
+  description={t(locale, 'page.about.sub')}
+  locale={locale}
+  path="/about"
+>
+  <SiteHeader slot="header" locale={locale} />
+
+  <PageHero
+    eyebrow={t(locale, 'page.about.eyebrow')}
+    title={t(locale, 'page.about.title')}
+    subtitle={t(locale, 'page.about.sub')}
+  />
+
+  <Section surface="white">
+    <Container>
+      <div class="vm">
+        <div class="vm__intro">
+          <Eyebrow>Who we are</Eyebrow>
+          <h2 class="vm__title">A precision-sensing partner, not a catalog reseller.</h2>
+          <p class="vm__body">SEN TECH was founded in 1994 in Taiwan as a specialist NTC thermistor manufacturer. Three decades later we still own every step from raw oxide to finished sensor, shipping to appliance, automotive, and 3C electronics OEMs in 20+ countries. Our customers come back because we engineer with them — not at them.</p>
+        </div>
+        <div class="vm__cards">
+          <div class="vm__card">
+            <Eyebrow class="vm__card-eyebrow">{t(locale, 'page.about.visionTitle')}</Eyebrow>
+            <p class="vm__card-text">{t(locale, 'page.about.vision')}</p>
+          </div>
+          <div class="vm__card vm__card--accent">
+            <Eyebrow class="vm__card-eyebrow">{t(locale, 'page.about.missionTitle')}</Eyebrow>
+            <p class="vm__card-text">{t(locale, 'page.about.mission')}</p>
+          </div>
+        </div>
+      </div>
+    </Container>
+  </Section>
+
+  {milestones && (
+    <MilestoneTimeline
+      eyebrow="Milestones"
+      title="Three decades of precision sensing."
+      body="From a single NTC thermistor line in 1994 to eight production families today."
+      items={milestones.data.items}
+    />
+  )}
+
+  {certs && (
+    <CertificationStrip
+      eyebrow="Certifications"
+      title="Quality systems and compliance frameworks."
+      items={certs.data.items}
+    />
+  )}
+
+  {contact && (isReal(contact.email) || isReal(contact.phone)) && (
+    <Section surface="navy" paddingY="tight">
+      <Container>
+        <div class="contact-strip">
+          <div class="contact-strip__lead">
+            <Eyebrow class="contact-strip__eyebrow">Get in touch</Eyebrow>
+            <h2 class="contact-strip__title">Ready to discuss your sensing project?</h2>
+          </div>
+          <ul class="contact-strip__list">
+            {isReal(contact.email) && (
+              <li>
+                <span>Email</span>
+                <a href={`mailto:${contact.email}`}>{contact.email}</a>
+              </li>
+            )}
+            {isReal(contact.phone) && (
+              <li>
+                <span>Phone</span>
+                <a href={`tel:${contact.phone.replace(/[^+\d]/g, '')}`}>{contact.phone}</a>
+              </li>
+            )}
+          </ul>
+          <Button variant="primary" href={localizedPath(locale, '/contact')} class="contact-strip__cta">
+            {t(locale, 'cta.sendInquiry')}
+          </Button>
+        </div>
+      </Container>
+    </Section>
+  )}
+
+  <SiteFooter slot="footer" locale={locale} />
+  <FloatingRfqButton locale={locale} />
+</BaseLayout>
+
+<style>
+  .vm { display: grid; grid-template-columns: 1fr; gap: var(--space-6); }
+  .vm__intro { display: flex; flex-direction: column; gap: var(--space-3); max-width: 60ch; }
+  .vm__title {
+    font-family: var(--font-display);
+    font-size: clamp(26px, 3vw, 36px);
+    color: var(--color-primary); line-height: 1.2;
+  }
+  .vm__body {
+    font-size: 16px; color: var(--color-text-body); line-height: 1.6;
+  }
+  .vm__cards {
+    display: grid; grid-template-columns: 1fr; gap: var(--space-3);
+  }
+  .vm__card {
+    background: var(--color-surface); border: 1px solid var(--color-stroke);
+    border-radius: var(--radius-card); padding: var(--space-5);
+    display: flex; flex-direction: column; gap: var(--space-3);
+  }
+  .vm__card--accent {
+    background: var(--color-primary); color: #fff; border-color: var(--color-primary);
+  }
+  .vm__card :global(.vm__card-eyebrow) {
+    color: var(--color-accent);
+  }
+  .vm__card-text {
+    font-family: var(--font-display);
+    font-size: 18px; line-height: 1.45;
+    color: var(--color-primary); font-weight: 500;
+  }
+  .vm__card--accent .vm__card-text { color: #fff; }
+
+  @media (min-width: 1024px) {
+    .vm { grid-template-columns: minmax(0, 6fr) minmax(0, 6fr); gap: var(--space-7); align-items: start; }
+  }
+
+  .contact-strip {
+    display: grid; grid-template-columns: 1fr; gap: var(--space-4);
+    align-items: center;
+  }
+  .contact-strip__lead :global(.contact-strip__eyebrow) { color: var(--color-accent); }
+  .contact-strip__title {
+    font-family: var(--font-display); color: #fff;
+    font-size: clamp(22px, 2.6vw, 28px); line-height: 1.2;
+    margin-top: var(--space-2);
+  }
+  .contact-strip__list {
+    list-style: none; padding: 0; margin: 0;
+    display: flex; flex-direction: column; gap: var(--space-2);
+  }
+  .contact-strip__list li {
+    display: flex; flex-direction: column; gap: 2px;
+  }
+  .contact-strip__list span {
+    font-size: 11px; color: rgba(255,255,255,0.6);
+    text-transform: uppercase; letter-spacing: 0.08em; font-weight: 600;
+  }
+  .contact-strip__list a {
+    color: #fff; font-weight: 600; text-decoration: none; font-size: 16px;
+  }
+  .contact-strip__list a:hover { color: var(--color-accent); }
+  .contact-strip__cta {
+    justify-self: start;
+  }
+  @media (min-width: 1024px) {
+    .contact-strip { grid-template-columns: minmax(0, 6fr) minmax(0, 4fr) auto; gap: var(--space-7); }
+  }
+</style>

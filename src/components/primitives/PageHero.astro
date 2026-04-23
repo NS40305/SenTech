@@ -1,0 +1,81 @@
+---
+import Container from '../layout/Container.astro';
+import Eyebrow from './Eyebrow.astro';
+
+export interface Props {
+  eyebrow: string;
+  title: string;
+  subtitle?: string;
+}
+
+const { eyebrow, title, subtitle } = Astro.props;
+---
+<section class="page-hero">
+  <div class="page-hero__deco" aria-hidden="true">
+    <div class="page-hero__glow"></div>
+  </div>
+  <Container>
+    <div class="page-hero__inner">
+      <Eyebrow class="page-hero__eyebrow">{eyebrow}</Eyebrow>
+      <h1 class="page-hero__title">{title}</h1>
+      {subtitle && <p class="page-hero__sub">{subtitle}</p>}
+    </div>
+  </Container>
+</section>
+
+<style>
+  .page-hero {
+    position: relative;
+    background: var(--color-primary);
+    color: #fff;
+    overflow: hidden;
+    isolation: isolate;
+    padding-block: var(--space-7);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+  .page-hero__deco {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background:
+      linear-gradient(135deg, rgba(0, 166, 192, 0.18) 0%, rgba(0, 166, 192, 0) 50%);
+  }
+  .page-hero__glow {
+    position: absolute;
+    top: -40%;
+    right: -10%;
+    width: 60%;
+    height: 180%;
+    background: radial-gradient(closest-side, rgba(0, 166, 192, 0.35) 0%, rgba(0, 166, 192, 0) 70%);
+    filter: blur(40px);
+    opacity: 0.6;
+  }
+  .page-hero__inner {
+    position: relative;
+    z-index: 1;
+    max-width: 880px;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+  .page-hero :global(.page-hero__eyebrow) {
+    color: var(--color-accent);
+  }
+  .page-hero__title {
+    font-family: var(--font-display);
+    font-size: clamp(32px, 4.4vw, 48px);
+    line-height: 1.15;
+    color: #fff;
+    font-weight: 700;
+    letter-spacing: -0.015em;
+  }
+  .page-hero__sub {
+    font-size: clamp(15px, 1.6vw, 18px);
+    line-height: 1.55;
+    color: rgba(255, 255, 255, 0.78);
+    max-width: 64ch;
+  }
+  @media (min-width: 768px) {
+    .page-hero { padding-block: var(--space-8); }
+  }
+</style>

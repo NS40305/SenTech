@@ -1,0 +1,191 @@
+---
+import { getEntry } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SiteHeader from '../components/layout/SiteHeader.astro';
+import SiteFooter from '../components/layout/SiteFooter.astro';
+import FloatingRfqButton from '../components/layout/FloatingRfqButton.astro';
+import Section from '../components/layout/Section.astro';
+import Container from '../components/layout/Container.astro';
+import Eyebrow from '../components/primitives/Eyebrow.astro';
+import PageHero from '../components/primitives/PageHero.astro';
+import ManufacturingDiagram from '../components/home/ManufacturingDiagram.astro';
+import CertificationStrip from '../components/home/CertificationStrip.astro';
+import RfqSection from '../components/home/RfqSection.astro';
+import { t } from '../i18n/ui';
+
+const locale = 'en' as const;
+const home = await getEntry('home', 'home-en');
+const certs = await getEntry('certifications', 'certifications');
+const manufacturing = home?.data.manufacturing;
+
+const integrationPillars = [
+  {
+    title: 'Material to chip',
+    body: 'Raw oxide blends formulated and pressed in-house. Sintering profiles are tuned per R/T curve target so we own the recipe — not a third-party chip vendor.',
+  },
+  {
+    title: 'Chip to element',
+    body: 'Lead attach, encapsulation, and trimming on calibrated Taiwan lines. Yield and tolerance are visible to engineering, not lost behind a contract supplier.',
+  },
+  {
+    title: 'Element to finished sensor',
+    body: 'Probe assembly, harness termination, and final calibration under one roof. Each lot is verified against the customer R/T target before shipment.',
+  },
+];
+
+const advantages = [
+  { value: '<5', unit: 'days', label: 'Sample lead time' },
+  { value: '±1', unit: '%', label: 'Tolerance floor' },
+  { value: '−50 to +250', unit: '°C', label: 'Operating range' },
+  { value: '8', unit: 'lines', label: 'Production product lines' },
+];
+---
+<BaseLayout
+  title="Manufacturing — In-house chip-to-sensor — SEN TECH"
+  description={t(locale, 'page.manufacturing.sub')}
+  locale={locale}
+  path="/manufacturing"
+>
+  <SiteHeader slot="header" locale={locale} />
+
+  <PageHero
+    eyebrow={t(locale, 'page.manufacturing.eyebrow')}
+    title={t(locale, 'page.manufacturing.title')}
+    subtitle={t(locale, 'page.manufacturing.sub')}
+  />
+
+  <Section surface="white">
+    <Container>
+      <div class="vi">
+        <div class="vi__intro">
+          <Eyebrow>Vertical integration</Eyebrow>
+          <h2 class="vi__title">Three production stages, one factory floor.</h2>
+          <p class="vi__sub">Most NTC vendors buy chips on the open market and assemble. SEN TECH owns the entire stack — material formulation, chip sintering, element assembly, and finished sensor calibration — in our Taiwan facility.</p>
+        </div>
+        <ul class="vi__pillars">
+          {integrationPillars.map((p, i) => (
+            <li class="vi__pillar">
+              <span class="vi__pillar-num">{String(i + 1).padStart(2, '0')}</span>
+              <h3>{p.title}</h3>
+              <p>{p.body}</p>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </Container>
+  </Section>
+
+  {manufacturing && (
+    <ManufacturingDiagram
+      eyebrow="Production line"
+      title={manufacturing.title}
+      body={manufacturing.body}
+      tiles={manufacturing.tiles}
+    />
+  )}
+
+  <Section surface="mist">
+    <Container>
+      <header class="adv__header">
+        <Eyebrow>Why it matters</Eyebrow>
+        <h2 class="adv__title">Vertical integration translates to harder numbers.</h2>
+      </header>
+      <ul class="adv__grid">
+        {advantages.map((a) => (
+          <li>
+            <div class="adv__value">{a.value}<span class="adv__unit">{a.unit}</span></div>
+            <div class="adv__label">{a.label}</div>
+          </li>
+        ))}
+      </ul>
+    </Container>
+  </Section>
+
+  {certs && (
+    <CertificationStrip
+      eyebrow="Quality systems"
+      title="Certifications and compliance frameworks our products are built to."
+      items={certs.data.items}
+    />
+  )}
+
+  <RfqSection
+    locale={locale}
+    eyebrow="Want to tour the facility?"
+    bullets={[
+      'Virtual line walkthrough on request',
+      'In-person factory visits welcome by appointment',
+      'Quality documentation packages on demand',
+    ]}
+  />
+
+  <SiteFooter slot="footer" locale={locale} />
+  <FloatingRfqButton locale={locale} />
+</BaseLayout>
+
+<style>
+  .vi { display: grid; grid-template-columns: 1fr; gap: var(--space-6); }
+  .vi__intro { display: flex; flex-direction: column; gap: var(--space-3); max-width: 60ch; }
+  .vi__title {
+    font-family: var(--font-display);
+    font-size: clamp(26px, 3vw, 36px);
+    line-height: 1.2; color: var(--color-primary);
+  }
+  .vi__sub {
+    font-size: 16px; color: var(--color-text-body); line-height: 1.6;
+  }
+  .vi__pillars {
+    list-style: none; padding: 0; margin: 0;
+    display: grid; grid-template-columns: 1fr; gap: var(--space-3);
+  }
+  .vi__pillar {
+    background: var(--color-surface); border: 1px solid var(--color-stroke);
+    border-radius: var(--radius-card); padding: var(--space-4);
+    display: flex; flex-direction: column; gap: var(--space-2);
+  }
+  .vi__pillar-num {
+    font-family: var(--font-mono); font-size: 18px; font-weight: 700;
+    color: var(--color-accent);
+  }
+  .vi__pillar h3 {
+    font-family: var(--font-display); font-size: 16px; font-weight: 700;
+    color: var(--color-primary); line-height: 1.3;
+  }
+  .vi__pillar p {
+    font-size: 14px; color: var(--color-text-body); line-height: 1.55;
+  }
+  @media (min-width: 1024px) {
+    .vi { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: var(--space-7); align-items: start; }
+  }
+
+  .adv__header { display: flex; flex-direction: column; gap: var(--space-2); margin-bottom: var(--space-5); max-width: 64ch; }
+  .adv__title {
+    font-family: var(--font-display);
+    font-size: clamp(22px, 2.6vw, 30px);
+    color: var(--color-primary); line-height: 1.2;
+  }
+  .adv__grid {
+    list-style: none; padding: 0; margin: 0;
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-4);
+  }
+  .adv__grid li {
+    background: #fff; border: 1px solid var(--color-stroke);
+    border-radius: var(--radius-card); padding: var(--space-4);
+    display: flex; flex-direction: column; gap: var(--space-2);
+  }
+  .adv__value {
+    font-family: var(--font-mono); font-size: clamp(28px, 3vw, 36px);
+    font-weight: 700; color: var(--color-primary); line-height: 1;
+    display: inline-flex; align-items: baseline;
+  }
+  .adv__unit {
+    font-size: 0.55em; color: var(--color-accent); margin-left: 4px;
+  }
+  .adv__label {
+    font-size: 13px; color: var(--color-text-muted);
+    text-transform: uppercase; letter-spacing: 0.06em;
+  }
+  @media (min-width: 768px) {
+    .adv__grid { grid-template-columns: repeat(4, 1fr); }
+  }
+</style>

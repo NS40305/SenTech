@@ -1,0 +1,190 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SiteHeader from '../../components/layout/SiteHeader.astro';
+import SiteFooter from '../../components/layout/SiteFooter.astro';
+import FloatingRfqButton from '../../components/layout/FloatingRfqButton.astro';
+import Section from '../../components/layout/Section.astro';
+import Container from '../../components/layout/Container.astro';
+import Eyebrow from '../../components/primitives/Eyebrow.astro';
+import PageHero from '../../components/primitives/PageHero.astro';
+import ProductCard from '../../components/home/ProductCard.astro';
+import RfqSection from '../../components/home/RfqSection.astro';
+import { t } from '../../i18n/ui';
+
+const locale = 'zh-TW' as const;
+
+const productEntries = await getCollection('products', ({ data }) => data.locale === 'zh-TW');
+const products = productEntries.map((e) => e.data);
+
+type Family = 'Standard' | 'High-Precision' | 'Specialty';
+const familyOrder: Family[] = ['High-Precision', 'Standard', 'Specialty'];
+const familyLabels: Record<Family, string> = {
+  Standard: t(locale, 'page.products.familyStandard'),
+  'High-Precision': t(locale, 'page.products.familyHighPrecision'),
+  Specialty: t(locale, 'page.products.familySpecialty'),
+};
+const familyDescriptions: Record<Family, string> = {
+  'High-Precision': '阻值與 B 值公差可達 ±1% 以內，適用於曲線形狀與點精度同樣重要的閉迴路控制。',
+  Standard: '高量產主力 NTC 元件，於工作點提供可靠匹配；針對 OEM 量產成本最佳化。',
+  Specialty: '特殊封裝形式——體溫感測、柔性引線、玻璃密封與超薄薄膜——應對非標機構或環境限制。',
+};
+const grouped = familyOrder.map((family) => ({
+  family,
+  label: familyLabels[family],
+  description: familyDescriptions[family],
+  items: products.filter((p) => p.family === family),
+}));
+
+const familyJump = familyOrder.map((f) => ({
+  id: `family-${f.toLowerCase().replace(/\s/g, '-')}`,
+  label: familyLabels[f],
+  count: products.filter((p) => p.family === f).length,
+}));
+---
+<BaseLayout
+  title="NTC 熱敏電阻與感測器產品 — 業達科技"
+  description={t(locale, 'page.products.sub')}
+  locale={locale}
+  path="/zh-tw/products"
+>
+  <SiteHeader slot="header" locale={locale} />
+
+  <PageHero
+    eyebrow={t(locale, 'page.products.eyebrow')}
+    title={t(locale, 'page.products.title')}
+    subtitle={t(locale, 'page.products.sub')}
+  />
+
+  <Section surface="white" paddingY="tight">
+    <Container>
+      <nav class="family-nav" aria-label="產品系列">
+        {familyJump.map((f, i) => (
+          <a class="family-nav__item" href={`#${f.id}`}>
+            <span class="family-nav__num">0{i + 1}</span>
+            <span class="family-nav__label">{f.label}</span>
+            <span class="family-nav__count">{f.count}</span>
+          </a>
+        ))}
+      </nav>
+    </Container>
+  </Section>
+
+  {grouped.map((group, idx) => (
+    <Section surface={idx % 2 === 0 ? 'mist' : 'white'} id={`family-${group.family.toLowerCase().replace(/\s/g, '-')}`}>
+      <Container>
+        <header class="family-header">
+          <Eyebrow>0{idx + 1} / {familyOrder.length}</Eyebrow>
+          <h2 class="family-header__title">{group.label}</h2>
+          <p class="family-header__desc">{group.description}</p>
+        </header>
+        <div class="family-grid">
+          {group.items.map((p) => (
+            <ProductCard
+              slug={p.slug}
+              family={p.family}
+              name={p.name}
+              tempMin={p.tempMin}
+              tempMax={p.tempMax}
+              tolerance={p.tolerance}
+              bValue={p.bValue}
+              dissipation={p.dissipation}
+              timeConstant={p.timeConstant}
+              maxPower={p.maxPower}
+              pdfUrl={p.pdfUrl}
+              image={p.image}
+              summary={p.summary}
+              locale={locale}
+            />
+          ))}
+        </div>
+      </Container>
+    </Section>
+  ))}
+
+  <RfqSection
+    locale={locale}
+    eyebrow="需要客製化？"
+    bullets={[
+      '提供目標曲線、B 值或完整機構圖',
+      '5 個工作天可行性評估',
+      '樣品直接由內部試產線交付',
+    ]}
+  />
+
+  <SiteFooter slot="footer" locale={locale} />
+  <FloatingRfqButton locale={locale} />
+</BaseLayout>
+
+<style>
+  .family-nav {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-2);
+  }
+  .family-nav__item {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-3) var(--space-4);
+    background: var(--color-surface);
+    border: 1px solid var(--color-stroke);
+    border-radius: var(--radius-card);
+    text-decoration: none;
+    color: var(--color-carbon);
+    transition: border-color var(--duration-fast) var(--easing-base),
+      background-color var(--duration-fast) var(--easing-base);
+  }
+  .family-nav__item:hover {
+    border-color: var(--color-accent);
+    background: #fff;
+  }
+  .family-nav__num {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--color-accent);
+    font-weight: 700;
+  }
+  .family-nav__label {
+    font-family: var(--font-display);
+    font-weight: 700;
+    color: var(--color-primary);
+    font-size: 15px;
+  }
+  .family-nav__count {
+    font-family: var(--font-mono);
+    color: var(--color-text-muted);
+    font-size: 13px;
+  }
+  .family-header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    margin-bottom: var(--space-5);
+    max-width: 64ch;
+  }
+  .family-header__title {
+    font-family: var(--font-display);
+    font-size: clamp(24px, 2.6vw, 32px);
+    color: var(--color-primary);
+    line-height: 1.2;
+  }
+  .family-header__desc {
+    font-size: 15px;
+    color: var(--color-text-body);
+    line-height: 1.6;
+  }
+  .family-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
+  @media (min-width: 640px) {
+    .family-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (min-width: 1024px) {
+    .family-grid { grid-template-columns: repeat(3, 1fr); gap: var(--space-5); }
+    .family-nav { grid-template-columns: repeat(3, 1fr); }
+  }
+</style>
