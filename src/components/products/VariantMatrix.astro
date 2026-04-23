@@ -19,36 +19,39 @@ export interface Props {
 }
 
 const { locale, productName, variants, bValues, r25Values, accuracies, productSlug } = Astro.props;
+const productNameJson = JSON.stringify(productName);
 
 const copy =
   locale === 'zh-TW'
     ? {
         eyebrow: '可訂購規格',
         title: `${productName}：完整規格矩陣`,
-        sub: `共 ${variants.length} 種出廠標準組合（B 值 × R25 阻值 × 精度）。其他組合可依 OEM 需求客製。`,
+        sub: `共 ${variants.length} 種出廠標準組合（B 值 × R25 阻值 × 精度）。點擊精度標籤即可加入詢價清單。`,
         bValueHead: 'B25/85 (K)',
         r25Head: 'R25 (kΩ)',
-        accuracyHead: '可選精度',
+        accuracyHead: '可選精度（點擊加入詢價）',
         countLabel: '組合數',
         bValuesLabel: 'B 值選項',
         r25Label: 'R25 選項',
         accLabel: '精度等級',
-        rfqCta: '索取此規格樣品',
-        rfqHint: '可訂購標準組合外，亦可指定客製規格。',
+        rfqHint: '已選規格將自動帶入詢價表單訊息欄。可訂購標準組合外，亦可指定客製規格。',
+        addedAria: '已加入詢價清單',
+        removeAria: '從詢價清單移除',
       }
     : {
         eyebrow: 'Orderable specifications',
         title: `${productName} — full specification matrix`,
-        sub: `${variants.length} standard factory combinations (B-value × R25 × accuracy). Custom combinations available via OEM service.`,
+        sub: `${variants.length} standard factory combinations (B-value × R25 × accuracy). Tap an accuracy chip to add it to your RFQ shortlist.`,
         bValueHead: 'B25/85 (K)',
         r25Head: 'R25 (kΩ)',
-        accuracyHead: 'Available accuracy',
+        accuracyHead: 'Available accuracy (tap to add to RFQ)',
         countLabel: 'combinations',
         bValuesLabel: 'B-value options',
         r25Label: 'R25 options',
         accLabel: 'Accuracy grades',
-        rfqCta: 'Request samples for this spec',
-        rfqHint: 'Standard combinations listed below; custom specifications also available.',
+        rfqHint: 'Selected specs auto-populate the RFQ form message field. Standard combinations below; custom specs also available.',
+        addedAria: 'Added to RFQ shortlist',
+        removeAria: 'Remove from RFQ shortlist',
       };
 
 // Group variants: bValue → r25 → [accuracies]
@@ -126,7 +129,23 @@ function sortAccuracies(arr: string[]): string[] {
                   <td class="vmx__r-cell">{r}</td>
                   <td class="vmx__acc-cell">
                     {sortAccuracies(accList).map((a) => (
-                      <span class="vmx__acc-pill">{a}</span>
+                      <button
+                        type="button"
+                        class="vmx__acc-pill"
+                        data-rfq-add
+                        data-slug={productSlug}
+                        data-product-name={productName}
+                        data-b={b}
+                        data-r={r}
+                        data-acc={a}
+                        aria-pressed="false"
+                        aria-label={`B${b} R${r}kΩ ${a}`}
+                      >
+                        <span class="vmx__acc-pill-label">{a}</span>
+                        <span class="vmx__acc-pill-check" aria-hidden="true">
+                          <svg viewBox="0 0 12 12" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 6.5l2.5 2.5 5-5"/></svg>
+                        </span>
+                      </button>
                     ))}
                   </td>
                 </tr>
@@ -138,6 +157,80 @@ function sortAccuracies(arr: string[]): string[] {
 
   <p class="vmx__hint">{copy.rfqHint}</p>
 </section>
+
+<script>
+  const STORAGE_KEY = 'sentech.rfq.shortlist';
+
+  type ShortlistItem = {
+    slug: string;
+    productName: string;
+    bValue: number;
+    r25: number;
+    accuracy: string;
+  };
+
+  function read(): ShortlistItem[] {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return [];
+      const parsed = JSON.parse(raw);
+      return Array.isArray(parsed) ? parsed : [];
+    } catch {
+      return [];
+    }
+  }
+
+  function write(items: ShortlistItem[]): void {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+    document.dispatchEvent(new CustomEvent('sentech:rfq:changed', { detail: { count: items.length } }));
+  }
+
+  function keyOf(it: { slug: string; bValue: number; r25: number; accuracy: string }): string {
+    return `${it.slug}|${it.bValue}|${it.r25}|${it.accuracy}`;
+  }
+
+  function syncButtonsToStorage(): void {
+    const items = read();
+    const set = new Set(items.map(keyOf));
+    document.querySelectorAll<HTMLButtonElement>('[data-rfq-add]').forEach((btn) => {
+      const k = keyOf({
+        slug: btn.dataset.slug ?? '',
+        bValue: Number(btn.dataset.b),
+        r25: Number(btn.dataset.r),
+        accuracy: btn.dataset.acc ?? '',
+      });
+      const active = set.has(k);
+      btn.classList.toggle('is-active', active);
+      btn.setAttribute('aria-pressed', String(active));
+    });
+  }
+
+  function setupVariantPills(): void {
+    document.querySelectorAll<HTMLButtonElement>('[data-rfq-add]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const item: ShortlistItem = {
+          slug: btn.dataset.slug ?? '',
+          productName: btn.dataset.productName ?? '',
+          bValue: Number(btn.dataset.b),
+          r25: Number(btn.dataset.r),
+          accuracy: btn.dataset.acc ?? '',
+        };
+        const items = read();
+        const k = keyOf(item);
+        const idx = items.findIndex((i) => keyOf(i) === k);
+        if (idx === -1) items.push(item);
+        else items.splice(idx, 1);
+        write(items);
+        syncButtonsToStorage();
+      });
+    });
+    syncButtonsToStorage();
+  }
+
+  if (document.readyState !== 'loading') setupVariantPills();
+  else document.addEventListener('DOMContentLoaded', setupVariantPills);
+</script>
+
 
 <style>
   .vmx {
@@ -277,17 +370,43 @@ function sortAccuracies(arr: string[]): string[] {
   .vmx__acc-pill {
     display: inline-flex;
     align-items: center;
-    padding: 3px 10px;
+    gap: 5px;
+    padding: 4px 11px;
     border-radius: var(--radius-pill);
-    background: rgba(0, 166, 192, 0.1);
+    background: rgba(0, 166, 192, 0.08);
     color: var(--color-accent);
     font-family: var(--font-mono);
     font-size: 12px;
     font-weight: 600;
     line-height: 1.4;
-    border: 1px solid rgba(0, 166, 192, 0.25);
+    border: 1.4px solid rgba(0, 166, 192, 0.25);
     white-space: nowrap;
+    cursor: pointer;
+    transition: background-color var(--duration-fast) var(--easing-base),
+      color var(--duration-fast) var(--easing-base),
+      border-color var(--duration-fast) var(--easing-base),
+      transform var(--duration-fast) var(--easing-base);
   }
+  .vmx__acc-pill:hover {
+    background: rgba(0, 166, 192, 0.18);
+    border-color: var(--color-accent);
+    transform: translateY(-1px);
+  }
+  .vmx__acc-pill:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+  .vmx__acc-pill-check {
+    display: none;
+    width: 11px;
+    height: 11px;
+  }
+  .vmx__acc-pill.is-active {
+    background: var(--color-accent);
+    color: #fff;
+    border-color: var(--color-accent);
+  }
+  .vmx__acc-pill.is-active .vmx__acc-pill-check { display: inline-flex; }
 
   .vmx__hint {
     font-size: 12px;

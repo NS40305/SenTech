@@ -99,6 +99,23 @@ const subject =
       />
     </div>
 
+    <div class="rfq-form__shortlist" data-rfq-shortlist hidden>
+      <div class="rfq-form__shortlist-head">
+        <strong data-rfq-shortlist-title>
+          {locale === 'zh-TW' ? '已選規格' : 'Selected specifications'}
+        </strong>
+        <button type="button" class="rfq-form__shortlist-clear" data-rfq-shortlist-clear>
+          {locale === 'zh-TW' ? '清空' : 'Clear all'}
+        </button>
+      </div>
+      <ul class="rfq-form__shortlist-items" data-rfq-shortlist-items></ul>
+      <p class="rfq-form__shortlist-hint">
+        {locale === 'zh-TW'
+          ? '上方規格將於送出時自動寫入訊息欄，並隨郵件送達工程團隊。'
+          : 'These specs are auto-prepended to your message and sent with the inquiry.'}
+      </p>
+    </div>
+
     <FormField
       name="message"
       label={t(locale, 'rfq.field.message')}
@@ -142,6 +159,48 @@ const subject =
 </div>
 
 <script>
+  const SHORTLIST_KEY = 'sentech.rfq.shortlist';
+
+  type ShortlistItem = {
+    slug: string;
+    productName: string;
+    bValue: number;
+    r25: number;
+    accuracy: string;
+  };
+
+  function readShortlist(): ShortlistItem[] {
+    try {
+      const raw = localStorage.getItem(SHORTLIST_KEY);
+      const parsed = raw ? JSON.parse(raw) : [];
+      return Array.isArray(parsed) ? parsed : [];
+    } catch {
+      return [];
+    }
+  }
+
+  function clearShortlist(): void {
+    localStorage.removeItem(SHORTLIST_KEY);
+    document.dispatchEvent(new CustomEvent('sentech:rfq:changed', { detail: { count: 0 } }));
+  }
+
+  function formatShortlist(items: ShortlistItem[], locale: string): string {
+    if (!items.length) return '';
+    const heading =
+      locale === 'zh-TW'
+        ? '【已選規格清單】'
+        : '[Requested specifications]';
+    const lines = items
+      .map(
+        (it) =>
+          `  - ${it.productName}: B=${it.bValue} K, R25=${it.r25} kΩ, ${
+            locale === 'zh-TW' ? '精度' : 'Accuracy'
+          }=${it.accuracy}`
+      )
+      .join('\n');
+    return `${heading}\n${lines}\n\n`;
+  }
+
   function setupForm(form: HTMLFormElement) {
     const wrapper = form.closest('.rfq-form-wrap') as HTMLElement | null;
     if (!wrapper) return;
@@ -150,12 +209,58 @@ const subject =
     const submitLabel = form.querySelector('[data-rfq-submit-label]') as HTMLElement | null;
     const submitSpinner = form.querySelector('[data-rfq-submit-spinner]') as HTMLElement | null;
     const submitBtn = form.querySelector('button[type="submit"]') as HTMLButtonElement | null;
+    const messageField = form.querySelector('textarea[name="message"]') as HTMLTextAreaElement | null;
+    const shortlistPanel = wrapper.querySelector('[data-rfq-shortlist]') as HTMLElement | null;
+    const shortlistList = wrapper.querySelector('[data-rfq-shortlist-items]') as HTMLElement | null;
+    const shortlistClearBtn = wrapper.querySelector('[data-rfq-shortlist-clear]') as HTMLButtonElement | null;
     const locale = form.dataset.locale ?? 'en';
     const errMsg =
       locale === 'zh-TW'
         ? '送出失敗，請稍後再試或直接寄信至 sales@sen-tech.com。'
         : 'Could not send — please retry or email sales@sen-tech.com.';
     const accessKey = (form.elements.namedItem('access_key') as HTMLInputElement | null)?.value ?? '';
+
+    function renderShortlist(): void {
+      const items = readShortlist();
+      if (!shortlistPanel || !shortlistList) return;
+      if (!items.length) {
+        shortlistPanel.hidden = true;
+        return;
+      }
+      shortlistPanel.hidden = false;
+      shortlistList.innerHTML = '';
+      items.forEach((it, idx) => {
+        const li = document.createElement('li');
+        li.className = 'rfq-form__shortlist-item';
+        li.innerHTML = `
+          <span class="rfq-form__shortlist-line">
+            <span class="rfq-form__shortlist-name">${it.productName}</span>
+            <span class="rfq-form__shortlist-spec">B=${it.bValue} K · R25=${it.r25} kΩ · ${it.accuracy}</span>
+          </span>
+          <button type="button" class="rfq-form__shortlist-remove" data-idx="${idx}" aria-label="${locale === 'zh-TW' ? '移除' : 'Remove'}">
+            <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 4l8 8M12 4l-8 8"/></svg>
+          </button>`;
+        shortlistList.appendChild(li);
+      });
+      shortlistList.querySelectorAll<HTMLButtonElement>('[data-idx]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const idx = Number(btn.dataset.idx);
+          const items = readShortlist();
+          items.splice(idx, 1);
+          localStorage.setItem(SHORTLIST_KEY, JSON.stringify(items));
+          document.dispatchEvent(new CustomEvent('sentech:rfq:changed', { detail: { count: items.length } }));
+          renderShortlist();
+        });
+      });
+    }
+
+    shortlistClearBtn?.addEventListener('click', () => {
+      clearShortlist();
+      renderShortlist();
+    });
+
+    document.addEventListener('sentech:rfq:changed', renderShortlist);
+    renderShortlist();
 
     form.addEventListener('submit', async (event) => {
       event.preventDefault();
@@ -175,6 +280,16 @@ const subject =
         return;
       }
 
+      // Pre-pend selected variants to the message (visible to user before submit too)
+      const shortlist = readShortlist();
+      if (shortlist.length && messageField) {
+        const prefix = formatShortlist(shortlist, locale);
+        const userText = messageField.value.startsWith(prefix)
+          ? messageField.value
+          : prefix + messageField.value;
+        messageField.value = userText;
+      }
+
       if (!form.reportValidity()) return;
 
       submitBtn?.setAttribute('disabled', 'true');
@@ -186,6 +301,9 @@ const subject =
       data.forEach((value, key) => {
         payload[key] = value;
       });
+      if (shortlist.length) {
+        payload.shortlist = JSON.stringify(shortlist);
+      }
 
       try {
         const res = await fetch(form.action, {
@@ -201,6 +319,8 @@ const subject =
           form.hidden = true;
           if (successPanel) successPanel.hidden = false;
           form.reset();
+          clearShortlist();
+          renderShortlist();
         } else {
           if (errorBox) {
             errorBox.textContent = json.message ?? errMsg;
@@ -261,6 +381,99 @@ const subject =
     padding: 10px 14px;
     font-size: 14px;
     line-height: 1.5;
+  }
+  .rfq-form__shortlist {
+    background: linear-gradient(180deg, rgba(0, 166, 192, 0.06) 0%, rgba(0, 166, 192, 0.02) 100%);
+    border: 1px solid rgba(0, 166, 192, 0.25);
+    border-radius: var(--radius-card);
+    padding: var(--space-3) var(--space-4);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+  .rfq-form__shortlist-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-3);
+  }
+  .rfq-form__shortlist-head strong {
+    font-family: var(--font-display);
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-accent);
+  }
+  .rfq-form__shortlist-clear {
+    background: transparent;
+    border: none;
+    color: var(--color-text-muted);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: var(--radius-button);
+  }
+  .rfq-form__shortlist-clear:hover { color: var(--color-error); background: rgba(180, 35, 24, 0.05); }
+  .rfq-form__shortlist-items {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .rfq-form__shortlist-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-3);
+    padding: 8px 12px;
+    background: #fff;
+    border: 1px solid var(--color-stroke);
+    border-radius: var(--radius-button);
+    font-size: 13px;
+  }
+  .rfq-form__shortlist-line {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+    flex: 1;
+  }
+  .rfq-form__shortlist-name {
+    font-weight: 600;
+    color: var(--color-primary);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .rfq-form__shortlist-spec {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--color-text-body);
+  }
+  .rfq-form__shortlist-remove {
+    background: transparent;
+    border: none;
+    color: var(--color-text-muted);
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color var(--duration-fast) var(--easing-base), color var(--duration-fast) var(--easing-base);
+  }
+  .rfq-form__shortlist-remove:hover {
+    background: rgba(180, 35, 24, 0.1);
+    color: var(--color-error);
+  }
+  .rfq-form__shortlist-hint {
+    font-size: 11.5px;
+    color: var(--color-text-muted);
+    line-height: 1.5;
+    margin-top: 2px;
   }
   .rfq-form__footer {
     display: flex;

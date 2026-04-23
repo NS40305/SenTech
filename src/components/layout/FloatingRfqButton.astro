@@ -2,11 +2,37 @@
 import { localizedPath, t, type Locale } from '../../i18n/ui';
 export interface Props { locale: Locale; }
 const { locale } = Astro.props;
-const href = localizedPath(locale, '/#rfq');
+const href = localizedPath(locale, '/contact');
+const tooltip = locale === 'zh-TW' ? '送出詢價（含已選規格）' : 'Send inquiry (with shortlisted specs)';
 ---
-<a class="frb" href={href} aria-label={t(locale, 'aria.openRfq')}>
+<a class="frb" href={href} aria-label={t(locale, 'aria.openRfq')} title={tooltip} data-rfq-link>
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="24" height="24"><rect x="3" y="5" width="18" height="14" rx="2"/><polyline points="3 7 12 13 21 7"/></svg>
+  <span class="frb__badge" data-rfq-badge hidden>0</span>
 </a>
+
+<script>
+  const STORAGE_KEY = 'sentech.rfq.shortlist';
+  function update(): void {
+    const badge = document.querySelector<HTMLElement>('[data-rfq-badge]');
+    if (!badge) return;
+    let count = 0;
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      const parsed = raw ? JSON.parse(raw) : [];
+      if (Array.isArray(parsed)) count = parsed.length;
+    } catch {}
+    if (count > 0) {
+      badge.textContent = String(count);
+      badge.hidden = false;
+    } else {
+      badge.hidden = true;
+    }
+  }
+  if (document.readyState !== 'loading') update();
+  else document.addEventListener('DOMContentLoaded', update);
+  document.addEventListener('sentech:rfq:changed', update);
+  window.addEventListener('storage', (e) => { if (e.key === STORAGE_KEY) update(); });
+</script>
 
 <style>
   .frb {
@@ -23,8 +49,35 @@ const href = localizedPath(locale, '/#rfq');
     justify-content: center;
     z-index: 60;
     text-decoration: none;
+    box-shadow: 0 6px 20px rgba(14, 42, 71, 0.25);
     transition: transform var(--duration-fast) var(--easing-base), background var(--duration-fast) var(--easing-base);
   }
   .frb:hover { background: var(--color-accent); transform: translateY(-2px); }
+  .frb__badge {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    min-width: 22px;
+    height: 22px;
+    padding: 0 6px;
+    border-radius: 11px;
+    background: var(--color-accent);
+    color: #fff;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    border: 2px solid #fff;
+    box-shadow: 0 2px 8px rgba(0, 166, 192, 0.4);
+    animation: frb-bounce 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  @keyframes frb-bounce {
+    0% { transform: scale(0.6); opacity: 0; }
+    50% { transform: scale(1.15); }
+    100% { transform: scale(1); opacity: 1; }
+  }
   @media (max-width: 480px) { .frb { right: var(--space-3); bottom: var(--space-3); } }
 </style>
