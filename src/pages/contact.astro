@@ -1,0 +1,145 @@
+---
+import { getEntry } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SiteHeader from '../components/layout/SiteHeader.astro';
+import SiteFooter from '../components/layout/SiteFooter.astro';
+import FloatingRfqButton from '../components/layout/FloatingRfqButton.astro';
+import Section from '../components/layout/Section.astro';
+import Container from '../components/layout/Container.astro';
+import Eyebrow from '../components/primitives/Eyebrow.astro';
+import RfqForm from '../components/forms/RfqForm.astro';
+import { t } from '../i18n/ui';
+
+const locale = 'en' as const;
+const settings = await getEntry('settings', 'settings-en');
+const contact = settings?.data.contact;
+---
+<BaseLayout
+  title="Contact SEN TECH — Request a Sample or Quote"
+  description="Send a sample request, RFQ, or feasibility question. A SEN TECH engineer replies within one business day."
+  locale={locale}
+  path="/contact"
+>
+  <SiteHeader slot="header" locale={locale} />
+
+  <Section surface="white" id="contact">
+    <Container>
+      <div class="contact__layout">
+        <header class="contact__intro">
+          <Eyebrow>Contact</Eyebrow>
+          <h1 class="contact__title">{t(locale, 'rfq.title')}</h1>
+          <p class="contact__sub">{t(locale, 'rfq.subtitle')}</p>
+
+          {contact && (
+            <ul class="contact__direct">
+              {contact.email && !contact.email.startsWith('[TBD') && (
+                <li>
+                  <span class="contact__direct-label">Email</span>
+                  <a href={`mailto:${contact.email}`}>{contact.email}</a>
+                </li>
+              )}
+              {contact.phone && !contact.phone.startsWith('[TBD') && (
+                <li>
+                  <span class="contact__direct-label">Phone</span>
+                  <a href={`tel:${contact.phone.replace(/[^+\d]/g, '')}`}>{contact.phone}</a>
+                </li>
+              )}
+            </ul>
+          )}
+
+          <div class="contact__sla-card">
+            <strong>SLA</strong>
+            <span>One business day reply, direct from a SEN TECH engineer.</span>
+          </div>
+        </header>
+
+        <div class="contact__form">
+          <RfqForm locale={locale} />
+        </div>
+      </div>
+    </Container>
+  </Section>
+
+  <SiteFooter slot="footer" locale={locale} />
+  <FloatingRfqButton locale={locale} />
+</BaseLayout>
+
+<style>
+  .contact__layout {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-6);
+  }
+  .contact__intro {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+  .contact__title {
+    font-family: var(--font-display);
+    font-size: clamp(28px, 3.6vw, 40px);
+    line-height: 1.15;
+    color: var(--color-primary);
+    font-weight: 700;
+  }
+  .contact__sub {
+    font-size: 16px;
+    color: var(--color-text-body);
+    line-height: 1.6;
+    max-width: 56ch;
+  }
+  .contact__direct {
+    list-style: none;
+    padding: 0;
+    margin: var(--space-3) 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+  .contact__direct li {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .contact__direct-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-text-muted);
+    font-weight: 600;
+  }
+  .contact__direct a {
+    color: var(--color-primary);
+    font-weight: 600;
+    text-decoration: none;
+    font-size: 16px;
+  }
+  .contact__direct a:hover { color: var(--color-accent); }
+  .contact__sla-card {
+    margin-top: var(--space-3);
+    padding: var(--space-3) var(--space-4);
+    background: var(--color-surface);
+    border: 1px solid var(--color-stroke);
+    border-left: 3px solid var(--color-accent);
+    border-radius: var(--radius-button);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .contact__sla-card strong {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-accent);
+  }
+  .contact__sla-card span {
+    font-size: 14px;
+    color: var(--color-text-body);
+  }
+  @media (min-width: 1024px) {
+    .contact__layout {
+      grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+      gap: var(--space-7);
+    }
+  }
+</style>

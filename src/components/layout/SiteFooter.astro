@@ -1,4 +1,5 @@
 ---
+import { getEntry } from 'astro:content';
 import Container from './Container.astro';
 import { localizedPath, t, type Locale } from '../../i18n/ui';
 
@@ -7,6 +8,15 @@ export interface Props {
 }
 const { locale } = Astro.props;
 const year = new Date().getFullYear();
+
+const settingsId = locale === 'zh-TW' ? 'settings-zh-tw' : 'settings-en';
+const settings = await getEntry('settings', settingsId);
+const contact = settings?.data.contact;
+const isReal = (s?: string) => Boolean(s) && !s!.startsWith('[TBD');
+const contactLabel =
+  locale === 'zh-TW'
+    ? { contact: '聯絡我們', address: '地址', phone: '電話', email: '電子郵件' }
+    : { contact: 'Contact', address: 'Address', phone: 'Phone', email: 'Email' };
 ---
 <footer class="site-footer">
   <Container>
@@ -25,11 +35,18 @@ const year = new Date().getFullYear();
         </ul>
       </div>
       <div>
-        <h4>Contact</h4>
+        <h4>{contactLabel.contact}</h4>
         <ul>
-          <li>[TBD: street address, Taiwan]</li>
-          <li>[TBD: phone]</li>
-          <li>[TBD: email]</li>
+          {isReal(contact?.email) && (
+            <li><a href={`mailto:${contact!.email}`}>{contact!.email}</a></li>
+          )}
+          {isReal(contact?.phone) && (
+            <li><a href={`tel:${contact!.phone.replace(/[^+\d]/g, '')}`}>{contact!.phone}</a></li>
+          )}
+          {isReal(contact?.address) && (
+            <li>{contact!.address}</li>
+          )}
+          <li><a href={localizedPath(locale, '/contact')}>{t(locale, 'cta.sendInquiry')}</a></li>
         </ul>
       </div>
     </div>

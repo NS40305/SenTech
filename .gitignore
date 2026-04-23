@@ -3,6 +3,9 @@ dist/
 .astro/
 .env
 .env.local
+.env.production
+.env.development
+.vercel/
 *.log
 .DS_Store
 .vscode/

@@ -33,10 +33,23 @@ const {
   ctaLabel = 'View details',
 } = Astro.props;
 
-const extraSpecs: Array<{ label: string; value: string }> = [];
-if (dissipation) extraSpecs.push({ label: 'Diss.', value: dissipation });
-if (timeConstant) extraSpecs.push({ label: 'τ', value: timeConstant });
-if (maxPower) extraSpecs.push({ label: 'Pmax', value: maxPower });
+type SpecRow = { label: string; value: string; numeric?: boolean; emphasis?: boolean };
+
+const primarySpecs: SpecRow[] = [
+  {
+    label: 'Operating',
+    value: `${tempMin} ~ ${tempMax} °C`,
+    numeric: true,
+    emphasis: true,
+  },
+  { label: 'Tolerance', value: tolerance, emphasis: true },
+];
+if (bValue) primarySpecs.push({ label: 'B-value', value: bValue });
+
+const secondarySpecs: SpecRow[] = [];
+if (dissipation) secondarySpecs.push({ label: 'Dissipation', value: dissipation });
+if (timeConstant) secondarySpecs.push({ label: 'Time const.', value: timeConstant });
+if (maxPower) secondarySpecs.push({ label: 'Max power', value: maxPower, numeric: true });
 
 const imageSrc = `/images/product-${image}.jpg`;
 ---
@@ -48,32 +61,28 @@ const imageSrc = `/images/product-${image}.jpg`;
   <div class="product-card__body">
     <h3 class="product-card__name">{name}</h3>
     <p class="product-card__summary">{summary}</p>
-    <dl class="product-card__specs">
-      <div>
-        <dt>Temp.</dt>
-        <dd><span class="num">{tempMin}</span> ~ <span class="num">{tempMax}</span> °C</dd>
-      </div>
-      <div>
-        <dt>Tol.</dt>
-        <dd>{tolerance}</dd>
-      </div>
-      {bValue && (
-        <div>
-          <dt>B-value</dt>
-          <dd>{bValue}</dd>
+
+    <dl class="spec-table">
+      {primarySpecs.map((s) => (
+        <div class:list={['spec-row', s.emphasis && 'spec-row--emphasis']}>
+          <dt class="spec-row__label">{s.label}</dt>
+          <dd class:list={['spec-row__value', s.numeric && 'spec-row__value--num']}>{s.value}</dd>
         </div>
+      ))}
+
+      {secondarySpecs.length > 0 && (
+        <>
+          <div class="spec-divider" aria-hidden="true"></div>
+          {secondarySpecs.map((s) => (
+            <div class="spec-row spec-row--secondary">
+              <dt class="spec-row__label">{s.label}</dt>
+              <dd class:list={['spec-row__value', s.numeric && 'spec-row__value--num']}>{s.value}</dd>
+            </div>
+          ))}
+        </>
       )}
     </dl>
-    {extraSpecs.length > 0 && (
-      <dl class="product-card__extras">
-        {extraSpecs.map((s) => (
-          <div>
-            <dt>{s.label}</dt>
-            <dd>{s.value}</dd>
-          </div>
-        ))}
-      </dl>
-    )}
+
     {href && (
       <a class="product-card__cta" href={href}>
         {ctaLabel}
@@ -145,58 +154,67 @@ const imageSrc = `/images/product-${image}.jpg`;
     line-height: 1.55;
     flex: 1;
   }
-  .product-card__specs {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
-    gap: var(--space-2) var(--space-3);
-    padding-top: var(--space-3);
-    border-top: 1px solid var(--color-stroke);
+
+  /* unified spec table */
+  .spec-table {
     margin: 0;
-  }
-  .product-card__specs div {
+    padding: var(--space-3) 0 0 0;
+    border-top: 1px solid var(--color-stroke);
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    gap: 6px;
   }
-  .product-card__specs dt {
-    font-size: 11px;
+  .spec-row {
+    display: grid;
+    grid-template-columns: 86px 1fr;
+    column-gap: var(--space-3);
+    align-items: baseline;
+    line-height: 1.45;
+  }
+  .spec-row__label {
+    font-size: 10.5px;
+    font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.08em;
     color: var(--color-text-muted);
+    margin: 0;
+    white-space: nowrap;
   }
-  .product-card__specs dd {
+  .spec-row__value {
+    margin: 0;
     font-size: 13px;
     color: var(--color-carbon);
-    margin: 0;
     font-weight: 500;
+    word-break: break-word;
+    overflow-wrap: anywhere;
   }
-  .product-card__specs .num {
+  .spec-row__value--num {
     font-family: var(--font-mono);
+    font-weight: 600;
+    letter-spacing: -0.01em;
   }
-  .product-card__extras {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(72px, 1fr));
-    gap: var(--space-1) var(--space-3);
-    margin: 0;
+  .spec-row--emphasis .spec-row__value {
+    color: var(--color-primary);
+    font-size: 14px;
+    font-weight: 700;
   }
-  .product-card__extras div {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-  }
-  .product-card__extras dt {
+  .spec-row--secondary .spec-row__label {
     font-size: 10px;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
     color: var(--color-text-muted);
-    font-family: var(--font-mono);
+    opacity: 0.85;
   }
-  .product-card__extras dd {
+  .spec-row--secondary .spec-row__value {
     font-size: 12px;
     color: var(--color-text-body);
-    margin: 0;
-    font-family: var(--font-mono);
+    font-weight: 500;
   }
+  .spec-divider {
+    height: 1px;
+    background: var(--color-stroke);
+    margin: 4px 0 2px 0;
+    opacity: 0.7;
+  }
+
   .product-card__cta {
     color: var(--color-accent);
     font-weight: 600;
@@ -207,7 +225,9 @@ const imageSrc = `/images/product-${image}.jpg`;
     gap: 6px;
     margin-top: var(--space-2);
   }
-  .product-card__cta:hover {
-    text-decoration: underline;
+  .product-card__cta:hover { text-decoration: underline; }
+
+  @media (max-width: 380px) {
+    .spec-row { grid-template-columns: 76px 1fr; column-gap: var(--space-2); }
   }
 </style>

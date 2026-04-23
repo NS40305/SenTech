@@ -1,0 +1,283 @@
+---
+import FormField from './FormField.astro';
+import FormSuccess from './FormSuccess.astro';
+import Button from '../primitives/Button.astro';
+import { t, type Locale } from '../../i18n/ui';
+
+export interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+
+const ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_KEY ?? '';
+const FORM_ENDPOINT = 'https://api.web3forms.com/submit';
+
+const productOptions =
+  locale === 'zh-TW'
+    ? [
+        '可互換式 NTC（IN）',
+        '玻璃珠型（GB）',
+        '單點匹配型（PM）',
+        'HT 高精度',
+        'HAT 高精度 AT',
+        'TS 體溫感測',
+        'TA-4 柔性引線',
+        'TJ 薄膜',
+        '其他 / 客製化需求',
+      ]
+    : [
+        'Interchangeable NTC (IN)',
+        'Glass Bead (GB)',
+        'Point Matched (PM)',
+        'HT High-Precision',
+        'HAT High-Precision AT',
+        'TS Body Temperature',
+        'TA-4 Flexible Lead',
+        'TJ Thin-Film',
+        'Other / Custom request',
+      ];
+
+const subject =
+  locale === 'zh-TW'
+    ? '【SEN TECH 官網詢價】'
+    : '[SEN TECH Website RFQ]';
+---
+<div class="rfq-form-wrap">
+  <form
+    class="rfq-form"
+    action={FORM_ENDPOINT}
+    method="POST"
+    novalidate
+    data-rfq-form
+    data-locale={locale}
+  >
+    <input type="hidden" name="access_key" value={ACCESS_KEY} />
+    <input type="hidden" name="subject" value={subject} />
+    <input type="hidden" name="from_name" value="SEN TECH Website" />
+    <input type="hidden" name="locale" value={locale} />
+    <input type="checkbox" name="botcheck" class="rfq-form__honeypot" tabindex="-1" autocomplete="off" />
+
+    <div class="rfq-form__grid">
+      <FormField
+        name="name"
+        label={t(locale, 'rfq.field.name')}
+        required
+        autocomplete="name"
+      />
+      <FormField
+        name="company"
+        label={t(locale, 'rfq.field.company')}
+        required
+        autocomplete="organization"
+      />
+      <FormField
+        name="email"
+        label={t(locale, 'rfq.field.email')}
+        type="email"
+        required
+        autocomplete="email"
+        inputmode="email"
+      />
+      <FormField
+        name="country"
+        label={t(locale, 'rfq.field.country')}
+        autocomplete="country-name"
+      />
+      <FormField
+        name="product"
+        label={t(locale, 'rfq.field.product')}
+        type="select"
+        required
+        options={productOptions}
+        placeholder={locale === 'zh-TW' ? '請選擇產品' : 'Select a product line'}
+      />
+      <FormField
+        name="quantity"
+        label={t(locale, 'rfq.field.quantity')}
+        type="text"
+        placeholder={locale === 'zh-TW' ? '例：50,000 / 年' : 'e.g. 50,000 / yr'}
+      />
+    </div>
+
+    <FormField
+      name="message"
+      label={t(locale, 'rfq.field.message')}
+      type="textarea"
+      required
+      rows={6}
+      placeholder={
+        locale === 'zh-TW'
+          ? '請描述目標規格、應用情境、或附上料號 / 機構圖。'
+          : 'Describe the target spec, application, or attach part numbers / drawings.'
+      }
+      hint={
+        locale === 'zh-TW'
+          ? '請避免在訊息中放置敏感資料；附件請另以郵件寄至 sales@sen-tech.com。'
+          : 'Avoid sensitive data here; attachments via sales@sen-tech.com if needed.'
+      }
+    />
+
+    <div class="rfq-form__error" role="alert" aria-live="assertive" data-rfq-error hidden></div>
+
+    <div class="rfq-form__footer">
+      <Button type="submit" variant="primary" class="rfq-form__submit">
+        <span data-rfq-submit-label>{t(locale, 'cta.sendInquiry')}</span>
+        <span data-rfq-submit-spinner hidden aria-hidden="true">…</span>
+      </Button>
+      <p class="rfq-form__sla">
+        {locale === 'zh-TW'
+          ? '一個工作天內由業達工程師回覆。'
+          : 'A SEN TECH engineer replies within one business day.'}
+      </p>
+    </div>
+  </form>
+
+  <div data-rfq-success hidden>
+    <FormSuccess
+      title={t(locale, 'rfq.success.title')}
+      body={t(locale, 'rfq.success.body')}
+      resetLabel={t(locale, 'rfq.success.again')}
+    />
+  </div>
+</div>
+
+<script>
+  function setupForm(form: HTMLFormElement) {
+    const wrapper = form.closest('.rfq-form-wrap') as HTMLElement | null;
+    if (!wrapper) return;
+    const successPanel = wrapper.querySelector('[data-rfq-success]') as HTMLElement | null;
+    const errorBox = form.querySelector('[data-rfq-error]') as HTMLElement | null;
+    const submitLabel = form.querySelector('[data-rfq-submit-label]') as HTMLElement | null;
+    const submitSpinner = form.querySelector('[data-rfq-submit-spinner]') as HTMLElement | null;
+    const submitBtn = form.querySelector('button[type="submit"]') as HTMLButtonElement | null;
+    const locale = form.dataset.locale ?? 'en';
+    const errMsg =
+      locale === 'zh-TW'
+        ? '送出失敗，請稍後再試或直接寄信至 sales@sen-tech.com。'
+        : 'Could not send — please retry or email sales@sen-tech.com.';
+    const accessKey = (form.elements.namedItem('access_key') as HTMLInputElement | null)?.value ?? '';
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      if (errorBox) {
+        errorBox.hidden = true;
+        errorBox.textContent = '';
+      }
+
+      if (!accessKey) {
+        if (errorBox) {
+          errorBox.textContent =
+            locale === 'zh-TW'
+              ? '尚未設定 Web3Forms access_key（PUBLIC_WEB3FORMS_KEY 環境變數）。'
+              : 'Web3Forms access_key is not configured (PUBLIC_WEB3FORMS_KEY env var).';
+          errorBox.hidden = false;
+        }
+        return;
+      }
+
+      if (!form.reportValidity()) return;
+
+      submitBtn?.setAttribute('disabled', 'true');
+      submitLabel?.setAttribute('hidden', '');
+      submitSpinner?.removeAttribute('hidden');
+
+      const data = new FormData(form);
+      const payload: Record<string, FormDataEntryValue> = {};
+      data.forEach((value, key) => {
+        payload[key] = value;
+      });
+
+      try {
+        const res = await fetch(form.action, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+          },
+          body: JSON.stringify(payload),
+        });
+        const json = (await res.json()) as { success?: boolean; message?: string };
+        if (json.success) {
+          form.hidden = true;
+          if (successPanel) successPanel.hidden = false;
+          form.reset();
+        } else {
+          if (errorBox) {
+            errorBox.textContent = json.message ?? errMsg;
+            errorBox.hidden = false;
+          }
+        }
+      } catch {
+        if (errorBox) {
+          errorBox.textContent = errMsg;
+          errorBox.hidden = false;
+        }
+      } finally {
+        submitBtn?.removeAttribute('disabled');
+        submitLabel?.removeAttribute('hidden');
+        submitSpinner?.setAttribute('hidden', '');
+      }
+    });
+
+    wrapper.querySelector('[data-action="reset"]')?.addEventListener('click', () => {
+      if (successPanel) successPanel.hidden = true;
+      form.hidden = false;
+    });
+  }
+
+  document.querySelectorAll<HTMLFormElement>('[data-rfq-form]').forEach(setupForm);
+</script>
+
+<style>
+  .rfq-form-wrap {
+    background: #fff;
+    border: 1px solid var(--color-stroke);
+    border-radius: var(--radius-card);
+    padding: var(--space-5);
+  }
+  .rfq-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+  .rfq-form__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-3) var(--space-4);
+  }
+  .rfq-form__honeypot {
+    position: absolute;
+    left: -10000px;
+    top: auto;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+  .rfq-form__error {
+    background: rgba(180, 35, 24, 0.08);
+    border: 1px solid rgba(180, 35, 24, 0.3);
+    color: var(--color-error);
+    border-radius: var(--radius-button);
+    padding: 10px 14px;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  .rfq-form__footer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    align-items: center;
+    border-top: 1px solid var(--color-stroke);
+    padding-top: var(--space-4);
+  }
+  .rfq-form__sla {
+    font-size: 13px;
+    color: var(--color-text-muted);
+  }
+  @media (min-width: 640px) {
+    .rfq-form__grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (min-width: 768px) {
+    .rfq-form-wrap { padding: var(--space-6); }
+  }
+</style>

@@ -1,0 +1,65 @@
+---
+export interface Props {
+  title: string;
+  body: string;
+  resetLabel: string;
+}
+const { title, body, resetLabel } = Astro.props;
+---
+<div class="form-success" role="status" aria-live="polite">
+  <div class="form-success__icon" aria-hidden="true">
+    <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="24" cy="24" r="20" stroke-width="2" />
+      <path d="M14 24l7 7 14-14" />
+    </svg>
+  </div>
+  <h3 class="form-success__title">{title}</h3>
+  <p class="form-success__body">{body}</p>
+  <button type="button" class="form-success__reset" data-action="reset">{resetLabel}</button>
+</div>
+
+<style>
+  .form-success {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: var(--space-3);
+    padding: var(--space-6) var(--space-4);
+    background: rgba(31, 157, 85, 0.06);
+    border: 1px solid rgba(31, 157, 85, 0.25);
+    border-radius: var(--radius-card);
+  }
+  .form-success__icon {
+    width: 56px;
+    height: 56px;
+    color: var(--color-success);
+  }
+  .form-success__icon svg { width: 100%; height: 100%; }
+  .form-success__title {
+    font-family: var(--font-display);
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--color-primary);
+    line-height: 1.25;
+  }
+  .form-success__body {
+    font-size: 15px;
+    color: var(--color-text-body);
+    line-height: 1.55;
+    max-width: 48ch;
+  }
+  .form-success__reset {
+    font-family: var(--font-body);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--color-accent);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 8px 0;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+  .form-success__reset:hover { color: var(--color-primary); }
+</style>

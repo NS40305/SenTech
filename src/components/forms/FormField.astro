@@ -1,0 +1,125 @@
+---
+export interface Props {
+  name: string;
+  label: string;
+  type?: 'text' | 'email' | 'tel' | 'url' | 'textarea' | 'select';
+  required?: boolean;
+  placeholder?: string;
+  autocomplete?: string;
+  options?: string[];
+  rows?: number;
+  hint?: string;
+  inputmode?: 'text' | 'email' | 'tel' | 'numeric' | 'decimal' | 'url';
+}
+
+const {
+  name,
+  label,
+  type = 'text',
+  required = false,
+  placeholder,
+  autocomplete,
+  options = [],
+  rows = 5,
+  hint,
+  inputmode,
+} = Astro.props;
+
+const id = `field-${name}`;
+---
+<div class="field">
+  <label for={id} class="field__label">
+    {label}
+    {required && <span class="field__required" aria-hidden="true">*</span>}
+  </label>
+
+  {type === 'textarea' ? (
+    <textarea
+      id={id}
+      name={name}
+      rows={rows}
+      required={required}
+      placeholder={placeholder}
+      autocomplete={autocomplete}
+      class="field__control field__control--textarea"
+    ></textarea>
+  ) : type === 'select' ? (
+    <select
+      id={id}
+      name={name}
+      required={required}
+      class="field__control field__control--select"
+    >
+      <option value="" selected disabled>{placeholder ?? '—'}</option>
+      {options.map((opt) => (
+        <option value={opt}>{opt}</option>
+      ))}
+    </select>
+  ) : (
+    <input
+      id={id}
+      name={name}
+      type={type}
+      required={required}
+      placeholder={placeholder}
+      autocomplete={autocomplete}
+      inputmode={inputmode}
+      class="field__control"
+    />
+  )}
+
+  {hint && <p class="field__hint">{hint}</p>}
+</div>
+
+<style>
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .field__label {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-text-muted);
+  }
+  .field__required {
+    color: var(--color-error);
+    margin-left: 2px;
+  }
+  .field__control {
+    font-family: var(--font-body);
+    font-size: 15px;
+    line-height: 1.4;
+    color: var(--color-carbon);
+    background: #fff;
+    border: 1px solid var(--color-stroke);
+    border-radius: var(--radius-button);
+    padding: 12px 14px;
+    width: 100%;
+    transition: border-color var(--duration-fast) var(--easing-base),
+      box-shadow var(--duration-fast) var(--easing-base);
+  }
+  .field__control:focus {
+    outline: none;
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 3px rgba(0, 166, 192, 0.18);
+  }
+  .field__control--textarea {
+    resize: vertical;
+    min-height: 120px;
+  }
+  .field__control--select {
+    appearance: none;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path fill='none' stroke='%2352606d' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round' d='M1 1l5 5 5-5'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    padding-right: 36px;
+  }
+  .field__hint {
+    font-size: 12px;
+    color: var(--color-text-muted);
+    line-height: 1.4;
+  }
+</style>
