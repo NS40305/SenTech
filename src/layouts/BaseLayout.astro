@@ -1,0 +1,49 @@
+---
+import '../styles/global.css';
+import type { Locale } from '../i18n/ui';
+
+export interface Props {
+  title: string;
+  description: string;
+  locale: Locale;
+  path: string;
+  ogImage?: string;
+}
+
+const { title, description, locale, path, ogImage = '/og-image.jpg' } = Astro.props;
+const htmlLang = locale === 'zh-TW' ? 'zh-TW' : 'en';
+const siteUrl = Astro.site?.toString() ?? 'https://sentech-redesign.pages.dev';
+const canonical = new URL(path, siteUrl).toString();
+const altPath = locale === 'en' ? `/zh-tw${path === '/' ? '' : path}` : path.replace(/^\/zh-tw/, '') || '/';
+const altLocale = locale === 'en' ? 'zh-TW' : 'en';
+---
+<!DOCTYPE html>
+<html lang={htmlLang}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link
+      rel="alternate"
+      hreflang={altLocale === 'zh-TW' ? 'zh-TW' : 'en'}
+      href={new URL(altPath, siteUrl).toString()}
+    />
+    <link rel="alternate" hreflang="x-default" href={new URL('/', siteUrl).toString()} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={new URL(ogImage, siteUrl).toString()} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  </head>
+  <body>
+    <slot name="header" />
+    <main id="main">
+      <slot />
+    </main>
+    <slot name="footer" />
+  </body>
+</html>
