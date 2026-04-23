@@ -256,7 +256,7 @@ if (product.maxPower) specs.push({ label: 'Max power rating', value: product.max
   .detail__open-new:hover { text-decoration: underline; }
   .detail__frame-wrap {
     position: relative; width: 100%;
-    aspect-ratio: 4 / 5;
+    height: clamp(420px, 80vh, 720px);
     background: var(--color-surface-alt);
   }
   .detail__frame {
@@ -275,6 +275,6 @@ if (product.maxPower) specs.push({ label: 'Max power rating', value: product.max
       gap: var(--space-7);
       align-items: start;
     }
-    .detail__frame-wrap { aspect-ratio: 4 / 5; min-height: 720px; }
+    .detail__frame-wrap { height: 820px; max-height: calc(100vh - 200px); }
   }
 </style>

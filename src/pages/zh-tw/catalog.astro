@@ -156,13 +156,14 @@ const sortedProducts = products
     font-family: var(--font-mono); font-size: 11px;
   }
   .cat__frame-wrap {
-    position: relative; aspect-ratio: 4 / 5; background: var(--color-surface-alt);
+    position: relative; height: clamp(420px, 80vh, 720px);
+    background: var(--color-surface-alt);
   }
   .cat__frame {
     position: absolute; inset: 0; width: 100%; height: 100%; border: 0; display: block; background: #fff;
   }
   @media (min-width: 1024px) {
     .cat__layout { grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: var(--space-7); align-items: start; }
-    .cat__frame-wrap { min-height: 760px; }
+    .cat__frame-wrap { height: 820px; max-height: calc(100vh - 200px); }
   }
 </style>
