@@ -44,6 +44,8 @@
   --duration-base: 300ms;
   --duration-slow: 800ms;
   --easing-base: cubic-bezier(0.4, 0, 0.2, 1);
+
+  --header-height: 72px;
 }
 
 html[lang^='zh'] {

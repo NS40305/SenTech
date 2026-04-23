@@ -27,6 +27,20 @@ const label = otherLocale === 'zh-TW' ? t(currentLocale, 'lang.zh') : t(currentL
     font-size: 13px;
     font-weight: 600;
     text-decoration: none;
+    transition: color var(--duration-base) var(--easing-base),
+      border-color var(--duration-base) var(--easing-base),
+      background-color var(--duration-base) var(--easing-base);
   }
   .lang:hover { border-color: var(--color-primary); }
+
+  /* Light variant when header is transparent over hero */
+  :global(.site-header--transparent:not(.is-scrolled)) .lang {
+    color: rgba(255, 255, 255, 0.92);
+    border-color: rgba(255, 255, 255, 0.4);
+  }
+  :global(.site-header--transparent:not(.is-scrolled)) .lang:hover {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.7);
+    color: #fff;
+  }
 </style>

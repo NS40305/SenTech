@@ -8,9 +8,10 @@ export interface Props {
   locale: Locale;
   path: string;
   ogImage?: string;
+  headerOverlay?: boolean;
 }
 
-const { title, description, locale, path, ogImage = '/og-image.jpg' } = Astro.props;
+const { title, description, locale, path, ogImage = '/og-image.jpg', headerOverlay = false } = Astro.props;
 const htmlLang = locale === 'zh-TW' ? 'zh-TW' : 'en';
 const siteUrl = Astro.site?.toString() ?? 'https://sentech-redesign.pages.dev';
 const canonical = new URL(path, siteUrl).toString();
@@ -41,7 +42,7 @@ const altPath = localizedPath(altLocale, cleanPath);
     <meta property="og:image" content={new URL(ogImage, siteUrl).toString()} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   </head>
-  <body>
+  <body class:list={[headerOverlay && 'has-header-overlay']}>
     <slot name="header" />
     <main id="main">
       <slot />
@@ -49,3 +50,10 @@ const altPath = localizedPath(altLocale, cleanPath);
     <slot name="footer" />
   </body>
 </html>
+
+<style is:global>
+  /* Header is position: fixed; non-overlay pages compensate with top padding. */
+  body:not(.has-header-overlay) main {
+    padding-top: var(--header-height);
+  }
+</style>

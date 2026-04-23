@@ -60,8 +60,9 @@ const rfqBullets = [
   description={homeData.hero.subhead}
   locale={locale}
   path="/zh-tw"
+  headerOverlay={true}
 >
-  <SiteHeader slot="header" locale={locale} />
+  <SiteHeader slot="header" locale={locale} transparent={true} />
 
   <Hero
     locale={locale}

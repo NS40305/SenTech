@@ -70,7 +70,8 @@ const effectiveCatalogHref = catalogHref ?? localizedPath(locale, '/catalog');
     isolation: isolate;
     display: grid;
     grid-template-areas: 'stack';
-    min-height: clamp(440px, 70vh, 760px);
+    min-height: 100svh;
+    min-height: 100vh;
   }
   .hero > * { grid-area: stack; }
   .hero__media {
@@ -107,6 +108,7 @@ const effectiveCatalogHref = catalogHref ?? localizedPath(locale, '/catalog');
     align-self: center;
     width: 100%;
     padding-block: var(--space-7);
+    padding-top: calc(var(--header-height) + var(--space-7));
     max-width: 880px;
   }
   .hero__headline {
