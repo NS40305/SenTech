@@ -1,0 +1,80 @@
+---
+import Container from './Container.astro';
+import LangSwitcher from './LangSwitcher.astro';
+import Button from '../primitives/Button.astro';
+import { localizedPath, t, type Locale } from '../../i18n/ui';
+
+export interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const path = Astro.url.pathname;
+const navItems = [
+  { key: 'nav.products' as const, href: localizedPath(locale, '/products') },
+  { key: 'nav.oem' as const, href: localizedPath(locale, '/oem') },
+  { key: 'nav.applications' as const, href: localizedPath(locale, '/applications') },
+  { key: 'nav.manufacturing' as const, href: localizedPath(locale, '/manufacturing') },
+  { key: 'nav.about' as const, href: localizedPath(locale, '/about') },
+];
+---
+<header class="site-header">
+  <Container>
+    <div class="row">
+      <a class="brand" href={localizedPath(locale, '/')}>
+        <span class="brand__name">SEN TECH</span>
+      </a>
+      <nav class="nav" aria-label="Primary">
+        <ul>
+          {navItems.map(({ key, href }) => (
+            <li><a href={href}>{t(locale, key)}</a></li>
+          ))}
+        </ul>
+      </nav>
+      <div class="actions">
+        <LangSwitcher currentLocale={locale} currentPath={path} />
+        <Button variant="primary" href={localizedPath(locale, '/contact')}>
+          {t(locale, 'cta.sendInquiry')}
+        </Button>
+      </div>
+    </div>
+  </Container>
+</header>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(246, 248, 250, 0.92);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--color-stroke);
+  }
+  .row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 72px;
+    gap: var(--space-4);
+  }
+  .brand__name {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 20px;
+    color: var(--color-primary);
+    letter-spacing: 0.04em;
+  }
+  .nav ul {
+    display: none;
+    list-style: none;
+    gap: var(--space-5);
+  }
+  .nav a {
+    color: var(--color-carbon);
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+  }
+  .nav a:hover { color: var(--color-accent); }
+  .actions { display: flex; align-items: center; gap: var(--space-3); }
+  @media (min-width: 1024px) { .nav ul { display: flex; } }
+</style>

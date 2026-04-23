@@ -1,0 +1,77 @@
+---
+import Container from './Container.astro';
+import { localizedPath, t, type Locale } from '../../i18n/ui';
+
+export interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const year = new Date().getFullYear();
+---
+<footer class="site-footer">
+  <Container>
+    <div class="grid">
+      <div>
+        <div class="brand">SEN TECH</div>
+        <p class="tagline">Precision sensing, engineered in-house since 1994.</p>
+      </div>
+      <div>
+        <h4>Sitemap</h4>
+        <ul>
+          <li><a href={localizedPath(locale, '/products')}>{t(locale, 'nav.products')}</a></li>
+          <li><a href={localizedPath(locale, '/oem')}>{t(locale, 'nav.oem')}</a></li>
+          <li><a href={localizedPath(locale, '/applications')}>{t(locale, 'nav.applications')}</a></li>
+          <li><a href={localizedPath(locale, '/about')}>{t(locale, 'nav.about')}</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <ul>
+          <li>[TBD: street address, Taiwan]</li>
+          <li>[TBD: phone]</li>
+          <li>[TBD: email]</li>
+        </ul>
+      </div>
+    </div>
+    <div class="bottom">© {year} SEN TECH. All rights reserved.</div>
+  </Container>
+</footer>
+
+<style>
+  .site-footer {
+    background: var(--color-carbon);
+    color: var(--color-text-muted);
+    padding-block: var(--space-7);
+    margin-top: auto;
+  }
+  .grid { display: grid; grid-template-columns: 1fr; gap: var(--space-6); }
+  .brand {
+    font-family: var(--font-display);
+    color: #fff;
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    margin-bottom: var(--space-2);
+  }
+  .tagline { color: var(--color-text-muted); max-width: 36ch; font-size: 14px; }
+  h4 {
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: var(--space-3);
+    font-family: var(--font-body);
+  }
+  ul { list-style: none; display: flex; flex-direction: column; gap: var(--space-2); }
+  ul a { color: var(--color-text-muted); font-size: 14px; text-decoration: none; }
+  ul a:hover { color: #fff; }
+  .bottom {
+    margin-top: var(--space-6);
+    padding-top: var(--space-4);
+    border-top: 1px solid #2a2f36;
+    font-size: 12px;
+    color: var(--color-text-muted);
+  }
+  @media (min-width: 768px) { .grid { grid-template-columns: 2fr 1fr 1fr; gap: var(--space-7); } }
+</style>

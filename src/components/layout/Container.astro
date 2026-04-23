@@ -1,0 +1,21 @@
+---
+export interface Props {
+  as?: string;
+  class?: string;
+}
+const { as: Tag = 'div', class: className } = Astro.props;
+---
+<Tag class:list={['container', className]}>
+  <slot />
+</Tag>
+
+<style>
+  .container {
+    width: 100%;
+    max-width: var(--max-content);
+    margin-inline: auto;
+    padding-inline: var(--space-4);
+  }
+  @media (min-width: 768px) { .container { padding-inline: var(--space-5); } }
+  @media (min-width: 1280px) { .container { padding-inline: var(--space-6); } }
+</style>

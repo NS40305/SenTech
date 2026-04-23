@@ -1,0 +1,32 @@
+---
+import { localizedPath, stripLocaleFromPath, t, type Locale } from '../../i18n/ui';
+
+export interface Props {
+  currentLocale: Locale;
+  currentPath: string;
+}
+const { currentLocale, currentPath } = Astro.props;
+const cleanPath = stripLocaleFromPath(currentPath);
+const otherLocale: Locale = currentLocale === 'en' ? 'zh-TW' : 'en';
+const otherHref = localizedPath(otherLocale, cleanPath);
+const label = otherLocale === 'zh-TW' ? t(currentLocale, 'lang.zh') : t(currentLocale, 'lang.en');
+---
+<a class="lang" href={otherHref} aria-label={t(currentLocale, 'lang.switchTo')}>
+  {label}
+</a>
+
+<style>
+  .lang {
+    display: inline-flex;
+    align-items: center;
+    height: 32px;
+    padding-inline: var(--space-3);
+    border: 1px solid var(--color-stroke);
+    border-radius: var(--radius-pill);
+    color: var(--color-primary);
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+  }
+  .lang:hover { border-color: var(--color-primary); }
+</style>

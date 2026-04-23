@@ -1,0 +1,27 @@
+---
+export interface Props {
+  surface?: 'white' | 'mist' | 'navy';
+  paddingY?: 'default' | 'tight';
+  id?: string;
+  class?: string;
+  as?: string;
+}
+const { surface = 'white', paddingY = 'default', id, class: className, as: Tag = 'section' } = Astro.props;
+---
+<Tag id={id} class:list={['section', `section--${surface}`, `section--py-${paddingY}`, className]}>
+  <slot />
+</Tag>
+
+<style>
+  .section { width: 100%; padding-block: var(--section-py-mobile); }
+  @media (min-width: 768px) { .section { padding-block: var(--section-py-tablet); } }
+  @media (min-width: 1280px) { .section { padding-block: var(--section-py-desktop); } }
+  .section--py-tight { padding-block: var(--space-5); }
+  @media (min-width: 768px) { .section--py-tight { padding-block: var(--space-6); } }
+  .section--white { background: var(--color-surface); color: var(--color-carbon); }
+  .section--mist { background: var(--color-surface-alt); color: var(--color-carbon); }
+  .section--navy { background: var(--color-primary); color: #fff; }
+  .section--navy :global(h1),
+  .section--navy :global(h2),
+  .section--navy :global(h3) { color: #fff; }
+</style>
