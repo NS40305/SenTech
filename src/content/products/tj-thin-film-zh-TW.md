@@ -2,13 +2,16 @@
 locale: zh-TW
 slug: tj-thin-film
 family: Specialty
-name: 薄膜型 NTC 熱敏電阻 (TJ)
-tempMin: -40
-tempMax: 125
-tolerance: "±2% (unverified)"
-bValue: "3500K (unverified)"
+name: TJ 薄膜型 NTC 熱敏電阻
+tempMin: -30
+tempMax: 90
+tolerance: "±1 / ±3 / ±5 %"
+bValue: "提供全系列 R/T 曲線材料"
+dissipation: "0.7 mW/°C 靜止空氣"
+timeConstant: "2 秒（攪拌油中）"
+maxPower: "3.5 mW（於 25 °C）"
 image: tj-thin-film
-summary: 500 µm 超薄薄膜型 NTC，適用於 3C 與電芯等高密度封裝應用。
+summary: 厚度僅 500 µm 的超薄 NTC，具優異電氣絕緣性，可安全應用於可能接觸電極的環境。通過 UL1434 認證，符合 RoHS，易於焊接。
 ---
 
-TJ 薄膜型 NTC 採用 500 µm 超薄基板，可貼附、堆疊或表面安裝於傳統珠型與晶片型無法置入的空間，適用於智慧型手機熱管理、電芯監測與超薄穿戴裝置。[TBD: 待確認薄膜尺寸與焊墊配置。]
+TJ 系列熱敏電阻採超薄 500 µm 設計，具優異的電氣絕緣性能，可安全應用於可能與電極接觸的環境。輕薄結構特別適合狹小空間——電池模組、薄型家電組件與嵌入式熱管理。通過 UL1434 認證並符合 RoHS，易於焊接，適合高良率 SMT 與通孔組裝。可依 OEM 熱管理需求客製溫度範圍、公差等級與引線規格。

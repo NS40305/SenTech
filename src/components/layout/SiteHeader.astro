@@ -20,8 +20,14 @@ const navItems = [
 <header class="site-header">
   <Container>
     <div class="row">
-      <a class="brand" href={localizedPath(locale, '/')}>
-        <span class="brand__name">SEN TECH</span>
+      <a class="brand" href={localizedPath(locale, '/')} aria-label="SEN TECH home">
+        <img
+          class="brand__logo"
+          src="/images/logo.png"
+          alt="SEN TECH"
+          width="266"
+          height="118"
+        />
       </a>
       <nav class="nav" aria-label="Primary">
         <ul>
@@ -56,12 +62,21 @@ const navItems = [
     height: 72px;
     gap: var(--space-4);
   }
-  .brand__name {
-    font-family: var(--font-display);
-    font-weight: 700;
-    font-size: 20px;
-    color: var(--color-primary);
-    letter-spacing: 0.04em;
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+    flex-shrink: 0;
+  }
+  .brand__logo {
+    display: block;
+    height: 28px;
+    width: auto;
+    max-width: 140px;
+    object-fit: contain;
+  }
+  @media (min-width: 768px) {
+    .brand__logo { height: 32px; max-width: 160px; }
   }
   .nav ul {
     display: none;

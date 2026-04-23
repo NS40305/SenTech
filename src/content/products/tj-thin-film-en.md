@@ -2,13 +2,16 @@
 locale: en
 slug: tj-thin-film
 family: Specialty
-name: TJ Thin-Film NTC
-tempMin: -40
-tempMax: 125
-tolerance: "±2% (unverified)"
-bValue: "3500K (unverified)"
+name: TJ Thin-Film NTC Thermistor
+tempMin: -30
+tempMax: 90
+tolerance: "±1 / ±3 / ±5 %"
+bValue: "Available in all R/T curve materials"
+dissipation: "0.7 mW/°C in still air"
+timeConstant: "2 s in stirred oil"
+maxPower: "3.5 mW (at 25 °C)"
 image: tj-thin-film
-summary: 500 µm thin-film NTC for embedding in space-constrained 3C and battery applications.
+summary: Ultra-thin 500 µm NTC with superior electrical insulation, safe for ambient contact with electrodes. UL1434 certified, RoHS compliant, easily soldered.
 ---
 
-The TJ thin-film NTC is built on a 500 µm substrate so it can be laminated, stacked, or surface-mounted into spaces a conventional bead or chip cannot reach. Designed for smartphone thermal management, battery cell monitoring, and ultra-thin wearables. [TBD: confirm exact film dimensions and bondable pad layout.]
+TJ series thermistors feature an ultra-thin 500 µm form factor and superior electrical insulation, allowing safe operation in environments where contact with electrodes may occur. The compact profile makes them ideal for narrow spaces — battery packs, slim appliance assemblies, and embedded thermal management. UL1434 certified and RoHS compliant, with easy soldering for high-yield SMT and through-hole assembly. Custom temperature ranges, tolerance grades, and lead options are available for OEM thermal-management programs.

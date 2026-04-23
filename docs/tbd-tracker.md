@@ -1,21 +1,25 @@
 # TBD Tracker
 
-Updated: 2026-04-23
+Updated: 2026-04-24
 
 ## Summary
 
-Total open TBDs after Foundation slice: **70**
+Total open TBDs: **50** (down from 70 after the verified-spec pass)
 
 ## Categories of open TBDs
 
-1. **Numbers strip** — annual capacity, OEM project count, countries shipped (`home-en.json`, `home-zh-TW.json`)
-2. **Certifications** — confirm which apply (ISO 9001, IATF 16949, RoHS, REACH) and exact scope (`certifications.json`)
-3. **Milestones** — fill in years 2002, 2010, 2018 with real titles + bodies (`milestones-en.json`, `milestones-zh-TW.json`)
-4. **Contact** — street address, phone, email (`SiteFooter.astro`, `settings-en.json`, `settings-zh-TW.json`)
+1. **Numbers strip** — annual capacity, OEM project count, countries shipped (`home-en.json`, `home-zh-TW.json`) — 6 TBDs
+2. **Certifications** — confirm scope strings for ISO 9001, IATF 16949, RoHS, REACH (`certifications.json`) — 4 TBDs
+3. **Milestones** — fill in years 2002, 2010, 2018 with real titles + bodies (`milestones-en.json`, `milestones-zh-TW.json`) — 12 TBDs
+4. **Contact** — street address only; email + phone resolved to `sales@sen-tech.com` / `+886-4-2493-3297` from official site (`settings-en.json`, `settings-zh-TW.json`, `SiteFooter.astro`) — 2 TBDs
 5. **Hosting** — custom domain, Web3Forms access key (deferred to Plan 3)
-6. **Product specs** — verify every spec marked `(unverified)` against actual datasheets (`src/content/products/*.md`)
-7. **Photography** — replace stock fill placeholders once SEN TECH supplies real factory + product photos (`src/assets/stock/_attribution.json` × 5 slots, ~15 TBDs)
-8. **Per-product / per-application body details** — biocompatibility certs, AEC-Q200 status, exact dimensions, lead options (in product/application markdown bodies)
+6. **Photography** — replace stock fill placeholders once SEN TECH supplies real factory + product photos (`src/assets/stock/_attribution.json` × 5 slots) — ~15 TBDs
+
+## Resolved in this pass
+
+- All 16 product markdown files now carry verified specs (operating range, tolerance, B-value availability, dissipation constant, thermal time constant, max power) sourced from sen-tech.com product pages (HT, HAT, GB, IN, PM, TS, TA-4, TJ series).
+- `(unverified)` markers fully removed from product front-matter.
+- Contact email + phone filled from official site footer; only street address still pending.
 
 ## Owner
 

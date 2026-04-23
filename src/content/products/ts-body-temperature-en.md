@@ -2,13 +2,16 @@
 locale: en
 slug: ts-body-temperature
 family: Specialty
-name: TS Body Temperature NTC
-tempMin: 0
-tempMax: 70
-tolerance: "±0.1°C (unverified)"
-bValue: "3950K (unverified)"
+name: TS Body-Temperature NTC Thermistor
+tempMin: -30
+tempMax: 100
+tolerance: "±1 / ±3 / ±5 %"
+bValue: "Available in all R/T curve materials"
+dissipation: "0.7 mW/°C in still air"
+timeConstant: "0.75 s in stirred oil"
+maxPower: "3.5 mW (at 25 °C)"
 image: ts-body-temperature
-summary: Medical-grade body-temperature NTC with ±0.1 °C accuracy across the 0–70 °C clinical range.
+summary: Compact, fast-response NTC purpose-built for medical equipment and clinical thermometers. Smaller than HAT with high reliability and excellent thermal cycle endurance.
 ---
 
-The TS body-temperature series is engineered for clinical thermometers, wearable health devices, and incubator probes that require ±0.1 °C accuracy in the human-body temperature window. Fast thermal response and biocompatible encapsulation options support both contact and probe-style designs. [TBD: confirm biocompatibility certifications and probe assembly options.]
+The TS series is a small-form-factor thermal sensor — physically smaller than HAT — engineered for medical equipment and clinical thermometers where rapid response time and high reliability are non-negotiable. Excellent thermal cycle endurance, RoHS compliance, and a fast 0.75 s thermal time constant in stirred oil make it suitable for body-temperature, infant-incubator, and patient-monitoring applications. Various lead materials, diameters, and lengths are available for OEM medical-device programs.

@@ -7,6 +7,9 @@ export interface Props {
   tempMax: number;
   tolerance: string;
   bValue?: string;
+  dissipation?: string;
+  timeConstant?: string;
+  maxPower?: string;
   image: string;
   summary: string;
   href?: string;
@@ -21,11 +24,19 @@ const {
   tempMax,
   tolerance,
   bValue,
+  dissipation,
+  timeConstant,
+  maxPower,
   image,
   summary,
   href,
   ctaLabel = 'View details',
 } = Astro.props;
+
+const extraSpecs: Array<{ label: string; value: string }> = [];
+if (dissipation) extraSpecs.push({ label: 'Diss.', value: dissipation });
+if (timeConstant) extraSpecs.push({ label: 'τ', value: timeConstant });
+if (maxPower) extraSpecs.push({ label: 'Pmax', value: maxPower });
 
 const imageSrc = `/images/product-${image}.jpg`;
 ---
@@ -53,6 +64,16 @@ const imageSrc = `/images/product-${image}.jpg`;
         </div>
       )}
     </dl>
+    {extraSpecs.length > 0 && (
+      <dl class="product-card__extras">
+        {extraSpecs.map((s) => (
+          <div>
+            <dt>{s.label}</dt>
+            <dd>{s.value}</dd>
+          </div>
+        ))}
+      </dl>
+    )}
     {href && (
       <a class="product-card__cta" href={href}>
         {ctaLabel}
@@ -150,6 +171,30 @@ const imageSrc = `/images/product-${image}.jpg`;
     font-weight: 500;
   }
   .product-card__specs .num {
+    font-family: var(--font-mono);
+  }
+  .product-card__extras {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(72px, 1fr));
+    gap: var(--space-1) var(--space-3);
+    margin: 0;
+  }
+  .product-card__extras div {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .product-card__extras dt {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-text-muted);
+    font-family: var(--font-mono);
+  }
+  .product-card__extras dd {
+    font-size: 12px;
+    color: var(--color-text-body);
+    margin: 0;
     font-family: var(--font-mono);
   }
   .product-card__cta {

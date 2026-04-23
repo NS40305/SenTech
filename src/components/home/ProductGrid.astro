@@ -20,6 +20,9 @@ export interface Props {
     tempMax: number;
     tolerance: string;
     bValue?: string;
+    dissipation?: string;
+    timeConstant?: string;
+    maxPower?: string;
     image: string;
     summary: string;
   }>;
@@ -49,6 +52,9 @@ const { locale, eyebrow, title, subtitle, viewAllLabel, products } = Astro.props
           tempMax={p.tempMax}
           tolerance={p.tolerance}
           bValue={p.bValue}
+          dissipation={p.dissipation}
+          timeConstant={p.timeConstant}
+          maxPower={p.maxPower}
           image={p.image}
           summary={p.summary}
         />
