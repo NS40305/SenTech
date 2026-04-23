@@ -70,8 +70,8 @@ const effectiveCatalogHref = catalogHref ?? localizedPath(locale, '/catalog');
     isolation: isolate;
     display: grid;
     grid-template-areas: 'stack';
-    min-height: 100svh;
-    min-height: 100vh;
+    min-height: calc(100svh - var(--header-height));
+    min-height: calc(100vh - var(--header-height));
   }
   .hero > * { grid-area: stack; }
   .hero__media {
@@ -108,14 +108,10 @@ const effectiveCatalogHref = catalogHref ?? localizedPath(locale, '/catalog');
     align-self: center;
     width: 100%;
     padding-block: var(--space-6);
-    padding-top: calc(var(--header-height) + var(--space-5));
     max-width: 880px;
   }
   @media (min-width: 768px) {
-    .hero__content {
-      padding-block: var(--space-7);
-      padding-top: calc(var(--header-height) + var(--space-7));
-    }
+    .hero__content { padding-block: var(--space-7); }
   }
   .hero__headline {
     font-family: var(--font-display);
