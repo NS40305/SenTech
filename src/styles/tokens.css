@@ -1,0 +1,52 @@
+:root {
+  --color-primary: #0e2a47;
+  --color-accent: #00a6c0;
+  --color-carbon: #1b1f23;
+
+  --color-surface: #f6f8fa;
+  --color-surface-alt: #edf1f5;
+  --color-stroke: #e4e7eb;
+  --color-text-muted: #9aa5b1;
+  --color-text-body: #52606d;
+
+  --color-success: #1f9d55;
+  --color-warning: #c97a0f;
+  --color-error: #b42318;
+  --color-tbd-bg: #fff5e6;
+  --color-tbd-text: #c97a0f;
+
+  --font-display: 'Manrope', system-ui, -apple-system, sans-serif;
+  --font-body: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+  --font-cjk: 'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 16px;
+  --space-4: 24px;
+  --space-5: 32px;
+  --space-6: 48px;
+  --space-7: 64px;
+  --space-8: 96px;
+
+  --section-py-mobile: var(--space-6);
+  --section-py-tablet: var(--space-7);
+  --section-py-desktop: var(--space-8);
+
+  --radius-card: 8px;
+  --radius-button: 6px;
+  --radius-pill: 999px;
+
+  --max-content: 1280px;
+  --measure-body: 64ch;
+
+  --duration-fast: 150ms;
+  --duration-base: 300ms;
+  --duration-slow: 800ms;
+  --easing-base: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+html[lang^='zh'] {
+  --font-display: var(--font-cjk);
+  --font-body: var(--font-cjk);
+}
