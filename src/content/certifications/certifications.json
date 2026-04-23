@@ -1,0 +1,8 @@
+{
+  "items": [
+    { "name": "ISO 9001", "scope": "[TBD: scope per latest cert]", "logoFile": "iso-9001.svg" },
+    { "name": "IATF 16949", "scope": "[TBD: confirm applicability]", "logoFile": "iatf-16949.svg" },
+    { "name": "RoHS", "scope": "[TBD: confirm applicability]", "logoFile": "rohs.svg" },
+    { "name": "REACH", "scope": "[TBD: confirm applicability]", "logoFile": "reach.svg" }
+  ]
+}

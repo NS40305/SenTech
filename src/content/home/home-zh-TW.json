@@ -1,0 +1,66 @@
+{
+  "locale": "zh-TW",
+  "hero": {
+    "headline": "從晶片到感測器，全製程自主生產。",
+    "subhead": "三十年深耕感測元件製造，垂直整合自主研發、晶片量產到成品出貨，服務全球家電、汽車電子與 3C 消費電子產業客戶。",
+    "ctaPrimaryLabel": "索取樣品",
+    "ctaSecondaryLabel": "下載產品型錄",
+    "heroImage": "factory-cleanroom",
+    "stats": [
+      { "value": "1994", "label": "成立年份" },
+      { "value": "台灣", "label": "製造基地" },
+      { "value": "20", "suffix": "+", "label": "出口國家" }
+    ]
+  },
+  "numbers": [
+    { "value": "30", "suffix": "+", "label": "年" },
+    { "value": "8", "label": "產品線" },
+    { "value": "[TBD]", "label": "年產能" },
+    { "value": "[TBD]", "label": "國家" },
+    { "value": "[TBD]", "label": "OEM 專案" }
+  ],
+  "reasons": [
+    { "icon": "factory", "title": "垂直整合自主生產", "body": "從 NTC 晶片、感測元件到成品全製程自主生產，單一供應商負責，公差更緊密。" },
+    { "icon": "precision", "title": "精準度領先", "body": "阻值與 B 值公差可達 ±1 %，符合高量產 OEM 使用需求。" },
+    { "icon": "agility", "title": "OEM 快速回應", "body": "提供目標曲線、B 值或完整機構圖，五個工作天內提供可行性評估。" }
+  ],
+  "productsIntro": {
+    "eyebrow": "產品系列",
+    "title": "8 種 NTC 熱敏電阻產品線，溫度涵蓋 −50 °C 至 +250 °C。",
+    "subtitle": "公差可達 ±1 %，從玻璃珠型到 500 µm 薄膜型多種封裝，皆針對高量產 OEM 應用優化。"
+  },
+  "oem": {
+    "eyebrow": "OEM 服務",
+    "title": "從規格到量產的客製化合作。",
+    "body": "提供目標曲線、B 值、封裝尺寸或完整機構圖，我們五個工作天內提供可行性評估，提供樣品驗證，依您的時程進入量產。",
+    "steps": [
+      { "title": "詢價", "body": "提供規格或機構圖" },
+      { "title": "設計", "body": "5 個工作天可行性評估" },
+      { "title": "樣品", "body": "提供驗證樣品" },
+      { "title": "驗證", "body": "現場或實驗室驗證支援" },
+      { "title": "量產", "body": "依您的時程進入量產" }
+    ],
+    "leadTimeNote": "樣品交期 5 個工作天",
+    "ctaLabel": "啟動 OEM 專案"
+  },
+  "applicationsIntro": {
+    "eyebrow": "應用領域",
+    "title": "深入您每天信賴的家電、車輛與電子產品中。",
+    "subtitle": "三大產業，八種產品線，一個垂直整合供應商。"
+  },
+  "manufacturing": {
+    "eyebrow": "製造能力",
+    "title": "晶片、元件、感測器，全製程自主生產。",
+    "body": "垂直整合讓我們能承諾更緊密的公差、更快的迭代與更短的交期。",
+    "tiles": [
+      { "title": "NTC 晶片線", "body": "原料到合格晶片", "image": "chip-line" },
+      { "title": "元件組裝", "body": "引線焊接與封裝", "image": "element-assembly" },
+      { "title": "品保與校驗", "body": "阻值與 B 值驗證", "image": "qa-lab" }
+    ]
+  },
+  "about": {
+    "eyebrow": "關於業達",
+    "title": "三十年精密感測製造經驗。",
+    "body": "業達科技自 1994 年於台灣製造精密感測元件，客戶遍及全球家電、汽車電子與 3C 電子 OEM 廠商，[TBD: 服務 20+ 國家]。"
+  }
+}

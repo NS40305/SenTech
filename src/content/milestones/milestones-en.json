@@ -1,0 +1,10 @@
+{
+  "locale": "en",
+  "items": [
+    { "year": 1994, "title": "Founded", "body": "SEN TECH established as an NTC thermistor specialist in Taiwan." },
+    { "year": 2002, "title": "[TBD: ISO 9001 certification]", "body": "[TBD: brief description]" },
+    { "year": 2010, "title": "[TBD: automotive-grade product line launched]", "body": "[TBD]" },
+    { "year": 2018, "title": "[TBD: IATF 16949]", "body": "[TBD]" },
+    { "year": 2024, "title": "Thin-film TJ series, 500 µm", "body": "Ultra-thin TJ series enables embedding in space-constrained applications." }
+  ]
+}

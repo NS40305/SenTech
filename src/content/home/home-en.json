@@ -1,0 +1,78 @@
+{
+  "locale": "en",
+  "hero": {
+    "headline": "From NTC chip to finished sensor — under one roof.",
+    "subhead": "30 years of vertically integrated sensing manufacturing for global OEMs. NTC thermistors and photoelectric components for appliance, automotive, and 3C electronics applications.",
+    "ctaPrimaryLabel": "Request a Sample",
+    "ctaSecondaryLabel": "Download Catalog",
+    "heroImage": "factory-cleanroom",
+    "stats": [
+      { "value": "1994", "label": "Founded" },
+      { "value": "Taiwan", "label": "Manufacturing" },
+      { "value": "20", "suffix": "+", "label": "Countries shipped" }
+    ]
+  },
+  "numbers": [
+    { "value": "30", "suffix": "+", "label": "years" },
+    { "value": "8", "label": "product lines" },
+    { "value": "[TBD]", "label": "units / yr" },
+    { "value": "[TBD]", "label": "countries" },
+    { "value": "[TBD]", "label": "OEM projects" }
+  ],
+  "reasons": [
+    {
+      "icon": "factory",
+      "title": "In-house vertical integration",
+      "body": "We produce our own NTC chips, elements, and finished sensors. One supplier, one accountability point, tighter tolerances."
+    },
+    {
+      "icon": "precision",
+      "title": "Precision tolerance leadership",
+      "body": "Tolerances down to ±1 % across resistance and B-value, qualified for high-volume OEM use."
+    },
+    {
+      "icon": "agility",
+      "title": "OEM agility",
+      "body": "Send a target curve, B-value, or full mechanical drawing. Feasibility review in five working days."
+    }
+  ],
+  "productsIntro": {
+    "eyebrow": "Products",
+    "title": "Eight NTC product lines covering −50 °C to +250 °C.",
+    "subtitle": "Tolerances to ±1 %, form factors from glass bead to 500 µm thin film. Every part qualified for high-volume OEM use."
+  },
+  "oem": {
+    "eyebrow": "OEM Service",
+    "title": "OEM and customization, from spec to scale.",
+    "body": "Send us a target curve, B-value, footprint, or full mechanical drawing. We respond with feasibility within five working days, ship qualification samples, and move to mass production on your schedule.",
+    "steps": [
+      { "title": "Inquiry", "body": "Send target spec or drawing." },
+      { "title": "Design", "body": "Feasibility review in 5 working days." },
+      { "title": "Sample", "body": "Qualification samples shipped." },
+      { "title": "Validation", "body": "On-site or in-lab qualification support." },
+      { "title": "Mass production", "body": "Ramp on your schedule." }
+    ],
+    "leadTimeNote": "Samples in 5 working days.",
+    "ctaLabel": "Start an OEM project"
+  },
+  "applicationsIntro": {
+    "eyebrow": "Applications",
+    "title": "Built into appliances people rely on, vehicles they trust, and devices they use every day.",
+    "subtitle": "Three industries. Eight product lines. One vertically integrated supplier."
+  },
+  "manufacturing": {
+    "eyebrow": "Manufacturing",
+    "title": "Chip, element, and sensor — produced in-house.",
+    "body": "Vertical integration is what lets us promise tighter tolerances, faster iteration, and shorter lead times.",
+    "tiles": [
+      { "title": "NTC chip line", "body": "Raw material to qualified chip", "image": "chip-line" },
+      { "title": "Element assembly", "body": "Lead attach and encapsulation", "image": "element-assembly" },
+      { "title": "QA & calibration", "body": "Resistance and B-value verification", "image": "qa-lab" }
+    ]
+  },
+  "about": {
+    "eyebrow": "About SEN TECH",
+    "title": "30 years of precision sensing.",
+    "body": "SEN TECH has manufactured precision sensing components in Taiwan since 1994. Our customers include appliance, automotive, and 3C electronics OEMs across [TBD: 20+ countries]."
+  }
+}

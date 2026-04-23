@@ -1,0 +1,10 @@
+{
+  "locale": "zh-TW",
+  "items": [
+    { "year": 1994, "title": "公司成立", "body": "業達科技於台灣成立，專注 NTC 熱敏電阻製造。" },
+    { "year": 2002, "title": "[TBD: 通過 ISO 9001 認證]", "body": "[TBD: 簡短描述]" },
+    { "year": 2010, "title": "[TBD: 推出車用等級產品線]", "body": "[TBD]" },
+    { "year": 2018, "title": "[TBD: 通過 IATF 16949 認證]", "body": "[TBD]" },
+    { "year": 2024, "title": "推出 500 µm 薄膜 TJ 系列", "body": "超薄 TJ 系列可嵌入空間極度受限的應用中。" }
+  ]
+}
