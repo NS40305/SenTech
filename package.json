@@ -17,7 +17,8 @@
     "format:check": "prettier --check \"src/**/*.{ts,astro,md,json}\"",
     "tbd": "node tools/check-tbd.mjs",
     "scrape:pdfs": "node tools/scrape-sentech-pdfs.mjs",
-    "scrape:images": "node tools/scrape-sentech-images.mjs"
+    "scrape:images": "node tools/scrape-sentech-images.mjs",
+    "scrape:variants": "node tools/scrape-sentech-variants.mjs"
   },
   "dependencies": {
     "@fontsource/inter": "^5.2.8",

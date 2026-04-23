@@ -131,6 +131,29 @@ const milestones = defineCollection({
   }),
 });
 
+const variants = defineCollection({
+  loader: glob({
+    pattern: '[!_]*.json',
+    base: './src/content/variants',
+    generateId: ({ entry }) => entry.replace(/\.json$/, ''),
+  }),
+  schema: z.object({
+    slug: z.string(),
+    sourceCatId: z.number().optional(),
+    count: z.number(),
+    bValues: z.array(z.number()),
+    r25Values: z.array(z.number()),
+    accuracies: z.array(z.string()),
+    matrix: z.array(
+      z.object({
+        bValue: z.number(),
+        r25: z.number(),
+        accuracy: z.string(),
+      })
+    ),
+  }),
+});
+
 export const collections = {
   settings,
   home,
@@ -138,4 +161,5 @@ export const collections = {
   applications,
   certifications,
   milestones,
+  variants,
 };

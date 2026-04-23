@@ -1,5 +1,5 @@
 ---
-import { getCollection } from 'astro:content';
+import { getCollection, getEntry } from 'astro:content';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import SiteHeader from '../../../components/layout/SiteHeader.astro';
 import SiteFooter from '../../../components/layout/SiteFooter.astro';
@@ -9,6 +9,7 @@ import Container from '../../../components/layout/Container.astro';
 import Eyebrow from '../../../components/primitives/Eyebrow.astro';
 import Button from '../../../components/primitives/Button.astro';
 import RfqSection from '../../../components/home/RfqSection.astro';
+import VariantMatrix from '../../../components/products/VariantMatrix.astro';
 import { localizedPath, t } from '../../../i18n/ui';
 
 export async function getStaticPaths() {
@@ -24,6 +25,8 @@ const locale = 'zh-TW' as const;
 const imageSrc = `/images/product-${product.image}.jpg`;
 const pdfUrl = product.pdfUrl ?? '/pdfs/sentech-catalog-placeholder.pdf';
 const pdfFilename = pdfUrl.split('/').pop() ?? 'datasheet.pdf';
+
+const variantData = await getEntry('variants', product.slug);
 
 type Spec = { label: string; value: string; numeric?: boolean };
 const specs: Spec[] = [
@@ -152,6 +155,18 @@ if (product.maxPower) specs.push({ label: '最大功率', value: product.maxPowe
           </div>
         </div>
       </div>
+
+      {variantData && (
+        <VariantMatrix
+          locale={locale}
+          productName={product.name}
+          productSlug={product.slug}
+          variants={variantData.data.matrix}
+          bValues={variantData.data.bValues}
+          r25Values={variantData.data.r25Values}
+          accuracies={variantData.data.accuracies}
+        />
+      )}
     </Container>
   </Section>
 

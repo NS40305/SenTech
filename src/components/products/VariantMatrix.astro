@@ -1,0 +1,298 @@
+---
+import Eyebrow from '../primitives/Eyebrow.astro';
+import type { Locale } from '../../i18n/ui';
+
+export interface VariantRow {
+  bValue: number;
+  r25: number;
+  accuracy: string;
+}
+
+export interface Props {
+  locale: Locale;
+  productName: string;
+  variants: VariantRow[];
+  bValues: number[];
+  r25Values: number[];
+  accuracies: string[];
+  productSlug: string;
+}
+
+const { locale, productName, variants, bValues, r25Values, accuracies, productSlug } = Astro.props;
+
+const copy =
+  locale === 'zh-TW'
+    ? {
+        eyebrow: '可訂購規格',
+        title: `${productName}：完整規格矩陣`,
+        sub: `共 ${variants.length} 種出廠標準組合（B 值 × R25 阻值 × 精度）。其他組合可依 OEM 需求客製。`,
+        bValueHead: 'B25/85 (K)',
+        r25Head: 'R25 (kΩ)',
+        accuracyHead: '可選精度',
+        countLabel: '組合數',
+        bValuesLabel: 'B 值選項',
+        r25Label: 'R25 選項',
+        accLabel: '精度等級',
+        rfqCta: '索取此規格樣品',
+        rfqHint: '可訂購標準組合外，亦可指定客製規格。',
+      }
+    : {
+        eyebrow: 'Orderable specifications',
+        title: `${productName} — full specification matrix`,
+        sub: `${variants.length} standard factory combinations (B-value × R25 × accuracy). Custom combinations available via OEM service.`,
+        bValueHead: 'B25/85 (K)',
+        r25Head: 'R25 (kΩ)',
+        accuracyHead: 'Available accuracy',
+        countLabel: 'combinations',
+        bValuesLabel: 'B-value options',
+        r25Label: 'R25 options',
+        accLabel: 'Accuracy grades',
+        rfqCta: 'Request samples for this spec',
+        rfqHint: 'Standard combinations listed below; custom specifications also available.',
+      };
+
+// Group variants: bValue → r25 → [accuracies]
+type BGroup = Map<number, Map<number, string[]>>;
+const grouped: BGroup = new Map();
+for (const v of variants) {
+  if (!grouped.has(v.bValue)) grouped.set(v.bValue, new Map());
+  const rMap = grouped.get(v.bValue)!;
+  if (!rMap.has(v.r25)) rMap.set(v.r25, []);
+  rMap.get(v.r25)!.push(v.accuracy);
+}
+
+// Sort accuracies inside each cell with a sensible order
+function sortAccuracies(arr: string[]): string[] {
+  const order = ['0.05°C', '0.10°C', '0.1°C', '0.20°C', '0.2°C', '0.5°C', '1%', '1~5%', '3%', '5%'];
+  return [...new Set(arr)].sort((a, b) => {
+    const ai = order.indexOf(a);
+    const bi = order.indexOf(b);
+    if (ai === -1 && bi === -1) return a.localeCompare(b);
+    if (ai === -1) return 1;
+    if (bi === -1) return -1;
+    return ai - bi;
+  });
+}
+---
+<section class="vmx" id="variants">
+  <header class="vmx__header">
+    <Eyebrow>{copy.eyebrow}</Eyebrow>
+    <h2 class="vmx__title">{copy.title}</h2>
+    <p class="vmx__sub">{copy.sub}</p>
+  </header>
+
+  <ul class="vmx__quickstats">
+    <li>
+      <span class="vmx__quick-num">{variants.length}</span>
+      <span class="vmx__quick-label">{copy.countLabel}</span>
+    </li>
+    <li>
+      <span class="vmx__quick-num">{bValues.length}</span>
+      <span class="vmx__quick-label">{copy.bValuesLabel}</span>
+    </li>
+    <li>
+      <span class="vmx__quick-num">{r25Values.length}</span>
+      <span class="vmx__quick-label">{copy.r25Label}</span>
+    </li>
+    <li>
+      <span class="vmx__quick-num">{accuracies.length}</span>
+      <span class="vmx__quick-label">{copy.accLabel}</span>
+    </li>
+  </ul>
+
+  <div class="vmx__table-wrap" role="region" aria-label={copy.title} tabindex="0">
+    <table class="vmx__table">
+      <thead>
+        <tr>
+          <th scope="col" class="vmx__col-b">{copy.bValueHead}</th>
+          <th scope="col" class="vmx__col-r">{copy.r25Head}</th>
+          <th scope="col">{copy.accuracyHead}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {Array.from(grouped.entries())
+          .sort(([a], [b]) => a - b)
+          .flatMap(([b, rMap]) =>
+            Array.from(rMap.entries())
+              .sort(([a], [c]) => a - c)
+              .map(([r, accList], idx) => (
+                <tr class:list={[idx === 0 && 'vmx__row--firstr']} data-b={b} data-r={r}>
+                  {idx === 0 && (
+                    <td class="vmx__b-cell" rowspan={rMap.size}>
+                      <span class="vmx__b-value">{b}</span>
+                      <span class="vmx__b-unit">K</span>
+                    </td>
+                  )}
+                  <td class="vmx__r-cell">{r}</td>
+                  <td class="vmx__acc-cell">
+                    {sortAccuracies(accList).map((a) => (
+                      <span class="vmx__acc-pill">{a}</span>
+                    ))}
+                  </td>
+                </tr>
+              ))
+          )}
+      </tbody>
+    </table>
+  </div>
+
+  <p class="vmx__hint">{copy.rfqHint}</p>
+</section>
+
+<style>
+  .vmx {
+    margin-top: var(--space-7);
+    padding-top: var(--space-6);
+    border-top: 1px solid var(--color-stroke);
+  }
+  .vmx__header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    max-width: 64ch;
+    margin-bottom: var(--space-5);
+  }
+  .vmx__title {
+    font-family: var(--font-display);
+    font-size: clamp(20px, 2.4vw, 28px);
+    font-weight: 700;
+    color: var(--color-primary);
+    line-height: 1.25;
+  }
+  .vmx__sub {
+    font-size: 14px;
+    color: var(--color-text-body);
+    line-height: 1.6;
+  }
+
+  .vmx__quickstats {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 var(--space-5) 0;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-3);
+  }
+  .vmx__quickstats li {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: var(--space-3) var(--space-4);
+    background: var(--color-surface);
+    border: 1px solid var(--color-stroke);
+    border-radius: var(--radius-card);
+  }
+  .vmx__quick-num {
+    font-family: var(--font-mono);
+    font-size: clamp(20px, 2.6vw, 26px);
+    font-weight: 700;
+    color: var(--color-primary);
+    line-height: 1;
+  }
+  .vmx__quick-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-text-muted);
+    margin-top: 4px;
+  }
+  @media (min-width: 768px) {
+    .vmx__quickstats { grid-template-columns: repeat(4, 1fr); }
+  }
+
+  .vmx__table-wrap {
+    overflow-x: auto;
+    border: 1px solid var(--color-stroke);
+    border-radius: var(--radius-card);
+    background: #fff;
+  }
+  .vmx__table-wrap:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+  .vmx__table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  .vmx__table thead th {
+    background: var(--color-surface);
+    color: var(--color-primary);
+    font-family: var(--font-display);
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    text-align: left;
+    padding: var(--space-3) var(--space-3);
+    border-bottom: 1px solid var(--color-stroke);
+    position: sticky;
+    top: 0;
+    z-index: 1;
+  }
+  .vmx__col-b { width: 110px; }
+  .vmx__col-r { width: 90px; }
+
+  .vmx__table tbody tr {
+    border-bottom: 1px solid var(--color-stroke);
+  }
+  .vmx__table tbody tr:last-child { border-bottom: none; }
+  .vmx__table tbody tr:hover { background: var(--color-surface); }
+
+  .vmx__b-cell {
+    background: linear-gradient(180deg, rgba(0, 166, 192, 0.05) 0%, rgba(0, 166, 192, 0.02) 100%);
+    border-right: 1px solid var(--color-stroke);
+    vertical-align: top;
+    padding: var(--space-3);
+    font-family: var(--font-mono);
+  }
+  .vmx__b-value {
+    display: block;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--color-primary);
+    line-height: 1;
+  }
+  .vmx__b-unit {
+    font-size: 11px;
+    color: var(--color-accent);
+    font-weight: 600;
+    margin-top: 2px;
+    display: block;
+  }
+
+  .vmx__r-cell {
+    padding: var(--space-3);
+    font-family: var(--font-mono);
+    font-weight: 600;
+    color: var(--color-carbon);
+  }
+
+  .vmx__acc-cell {
+    padding: var(--space-3);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .vmx__acc-pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 10px;
+    border-radius: var(--radius-pill);
+    background: rgba(0, 166, 192, 0.1);
+    color: var(--color-accent);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.4;
+    border: 1px solid rgba(0, 166, 192, 0.25);
+    white-space: nowrap;
+  }
+
+  .vmx__hint {
+    font-size: 12px;
+    color: var(--color-text-muted);
+    margin-top: var(--space-3);
+    line-height: 1.5;
+  }
+</style>

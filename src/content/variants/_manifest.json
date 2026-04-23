@@ -1,0 +1,157 @@
+{
+  "capturedAt": "2026-04-23T20:41:23.157Z",
+  "source": "https://www.sen-tech.com/zh_TW/shop/category/",
+  "note": "Per-product variant matrices scraped from SEN TECH zh_TW shop. Re-run via npm run scrape:variants.",
+  "files": [
+    {
+      "slug": "nti-interchangeable",
+      "file": "src/content/variants/nti-interchangeable.json",
+      "count": 59,
+      "bValues": [
+        3435,
+        3535,
+        3695,
+        3942,
+        3977,
+        4262
+      ],
+      "r25Values": [
+        1,
+        2.52,
+        3,
+        5,
+        10,
+        20,
+        30,
+        50,
+        100
+      ],
+      "accuracies": [
+        "0.1°C",
+        "1~5%",
+        "0.2°C",
+        "0.05°C"
+      ]
+    },
+    {
+      "slug": "glass-bead",
+      "file": "src/content/variants/glass-bead.json",
+      "count": 0,
+      "bValues": [],
+      "r25Values": [],
+      "accuracies": []
+    },
+    {
+      "slug": "single-point-matched",
+      "file": "src/content/variants/single-point-matched.json",
+      "count": 0,
+      "bValues": [],
+      "r25Values": [],
+      "accuracies": []
+    },
+    {
+      "slug": "ht-high-precision",
+      "file": "src/content/variants/ht-high-precision.json",
+      "count": 0,
+      "bValues": [],
+      "r25Values": [],
+      "accuracies": []
+    },
+    {
+      "slug": "hat-high-precision",
+      "file": "src/content/variants/hat-high-precision.json",
+      "count": 0,
+      "bValues": [],
+      "r25Values": [],
+      "accuracies": []
+    },
+    {
+      "slug": "ts-body-temperature",
+      "file": "src/content/variants/ts-body-temperature.json",
+      "count": 0,
+      "bValues": [],
+      "r25Values": [],
+      "accuracies": []
+    },
+    {
+      "slug": "ta-4-flex",
+      "file": "src/content/variants/ta-4-flex.json",
+      "count": 0,
+      "bValues": [],
+      "r25Values": [],
+      "accuracies": []
+    },
+    {
+      "slug": "tj-thin-film",
+      "file": "src/content/variants/tj-thin-film.json",
+      "count": 0,
+      "bValues": [],
+      "r25Values": [],
+      "accuracies": []
+    },
+    {
+      "slug": "dt-diode",
+      "file": "src/content/variants/dt-diode.json",
+      "count": 0,
+      "bValues": [],
+      "r25Values": [],
+      "accuracies": []
+    },
+    {
+      "slug": "ct-smd-chip",
+      "file": "src/content/variants/ct-smd-chip.json",
+      "count": 0,
+      "bValues": [],
+      "r25Values": [],
+      "accuracies": []
+    },
+    {
+      "slug": "sm-smd-ceramic",
+      "file": "src/content/variants/sm-smd-ceramic.json",
+      "count": 0,
+      "bValues": [],
+      "r25Values": [],
+      "accuracies": []
+    },
+    {
+      "slug": "tr-transducer",
+      "file": "src/content/variants/tr-transducer.json",
+      "count": 0,
+      "bValues": [],
+      "r25Values": [],
+      "accuracies": []
+    },
+    {
+      "slug": "ls-life-sciences",
+      "file": "src/content/variants/ls-life-sciences.json",
+      "count": 0,
+      "bValues": [],
+      "r25Values": [],
+      "accuracies": []
+    },
+    {
+      "slug": "lsmn-mini-probe",
+      "file": "src/content/variants/lsmn-mini-probe.json",
+      "count": 0,
+      "bValues": [],
+      "r25Values": [],
+      "accuracies": []
+    },
+    {
+      "slug": "lsmc-micro-probe",
+      "file": "src/content/variants/lsmc-micro-probe.json",
+      "count": 0,
+      "bValues": [],
+      "r25Values": [],
+      "accuracies": []
+    },
+    {
+      "slug": "custom-assembly",
+      "file": "src/content/variants/custom-assembly.json",
+      "count": 0,
+      "bValues": [],
+      "r25Values": [],
+      "accuracies": []
+    }
+  ]
+}
