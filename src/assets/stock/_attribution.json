@@ -1,0 +1,56 @@
+{
+  "capturedAt": "2026-04-23",
+  "instructions": "For each entry below, the SEN TECH team or designer should: (1) browse Unsplash, (2) pick a photo matching the 'searchHint', (3) paste the source URL + photographer info, (4) download to this directory with the listed filename. All Unsplash photos are CC0 / Unsplash License — free for commercial use without attribution required, but we record attribution for transparency.",
+  "items": [
+    {
+      "filename": "stock-factory-cleanroom.jpg",
+      "useFor": "Hero, Manufacturing section",
+      "searchHint": "industrial cleanroom electronics manufacturing, no people, neutral lighting, wide composition",
+      "source": "[TBD: paste Unsplash URL]",
+      "photographer": "[TBD]",
+      "photographerUrl": "[TBD]",
+      "license": "Unsplash License",
+      "downloaded": false
+    },
+    {
+      "filename": "stock-ntc-macro.jpg",
+      "useFor": "ProductCard fallback, NumbersStrip",
+      "searchHint": "macro shot small electronic component on neutral background",
+      "source": "[TBD]",
+      "photographer": "[TBD]",
+      "photographerUrl": "[TBD]",
+      "license": "Unsplash License",
+      "downloaded": false
+    },
+    {
+      "filename": "stock-automotive-interior.jpg",
+      "useFor": "ApplicationsSection — Automotive Electronics",
+      "searchHint": "car dashboard or EV battery management close-up, modern, clean",
+      "source": "[TBD]",
+      "photographer": "[TBD]",
+      "photographerUrl": "[TBD]",
+      "license": "Unsplash License",
+      "downloaded": false
+    },
+    {
+      "filename": "stock-appliance-interior.jpg",
+      "useFor": "ApplicationsSection — Home Appliance",
+      "searchHint": "modern kitchen appliance close-up, refrigerator interior or oven control panel",
+      "source": "[TBD]",
+      "photographer": "[TBD]",
+      "photographerUrl": "[TBD]",
+      "license": "Unsplash License",
+      "downloaded": false
+    },
+    {
+      "filename": "stock-qa-lab.jpg",
+      "useFor": "Manufacturing — QA tile",
+      "searchHint": "laboratory measurement equipment, oscilloscope or precision instrument, neutral",
+      "source": "[TBD]",
+      "photographer": "[TBD]",
+      "photographerUrl": "[TBD]",
+      "license": "Unsplash License",
+      "downloaded": false
+    }
+  ]
+}
