@@ -1,0 +1,153 @@
+---
+import Section from '../layout/Section.astro';
+import Container from '../layout/Container.astro';
+import Eyebrow from '../primitives/Eyebrow.astro';
+
+export interface Props {
+  eyebrow: string;
+  title: string;
+  body: string;
+  tiles: Array<{ title: string; body: string; image?: string }>;
+}
+
+const { eyebrow, title, body, tiles } = Astro.props;
+
+const tileImageMap: Record<string, string> = {
+  'chip-line': '/images/oem-1.png',
+  'element-assembly': '/images/oem-2.png',
+  'qa-lab': '/images/oem-3.png',
+};
+---
+<Section surface="navy" id="manufacturing">
+  <Container>
+    <header class="mfg__header">
+      <Eyebrow class="mfg__eyebrow">{eyebrow}</Eyebrow>
+      <h2 class="mfg__title">{title}</h2>
+      <p class="mfg__body">{body}</p>
+    </header>
+    <ol class="mfg__pipeline" aria-label="Manufacturing pipeline">
+      {tiles.map((tile, i) => (
+        <li class="mfg__tile">
+          <div class="mfg__tile-media">
+            {tile.image && tileImageMap[tile.image] ? (
+              <img src={tileImageMap[tile.image]} alt={tile.title} loading="lazy" decoding="async" width="320" height="200" />
+            ) : (
+              <div class="mfg__tile-placeholder" aria-hidden="true">{String(i + 1).padStart(2, '0')}</div>
+            )}
+          </div>
+          <div class="mfg__tile-step">Step {String(i + 1).padStart(2, '0')}</div>
+          <h3 class="mfg__tile-title">{tile.title}</h3>
+          <p class="mfg__tile-body">{tile.body}</p>
+          {i < tiles.length - 1 && (
+            <span class="mfg__connector" aria-hidden="true">→</span>
+          )}
+        </li>
+      ))}
+    </ol>
+  </Container>
+</Section>
+
+<style>
+  .mfg__header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    max-width: 64ch;
+    margin-bottom: var(--space-6);
+  }
+  .mfg__header :global(.mfg__eyebrow) { color: var(--color-accent); }
+  .mfg__title {
+    font-family: var(--font-display);
+    font-size: clamp(26px, 3vw, 36px);
+    line-height: 1.2;
+    color: #fff;
+  }
+  .mfg__body {
+    font-size: 16px;
+    color: rgba(255, 255, 255, 0.78);
+    line-height: 1.6;
+  }
+  .mfg__pipeline {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
+  .mfg__tile {
+    position: relative;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: var(--radius-card);
+    padding: var(--space-4);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+  .mfg__tile-media {
+    aspect-ratio: 16 / 9;
+    border-radius: var(--radius-card);
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.06);
+    margin-bottom: var(--space-3);
+  }
+  .mfg__tile-media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    filter: saturate(0.85);
+  }
+  .mfg__tile-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-mono);
+    font-size: 36px;
+    color: var(--color-accent);
+    font-weight: 700;
+  }
+  .mfg__tile-step {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-accent);
+    font-weight: 600;
+  }
+  .mfg__tile-title {
+    font-family: var(--font-display);
+    font-size: 18px;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.3;
+  }
+  .mfg__tile-body {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.72);
+    line-height: 1.55;
+  }
+  .mfg__connector {
+    display: none;
+    color: var(--color-accent);
+    font-size: 24px;
+    font-weight: 700;
+  }
+  @media (min-width: 768px) {
+    .mfg__pipeline {
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-5);
+    }
+    .mfg__connector {
+      display: inline-block;
+      position: absolute;
+      right: calc(var(--space-5) * -1);
+      top: 50%;
+      transform: translate(50%, -50%);
+      z-index: 1;
+    }
+  }
+</style>

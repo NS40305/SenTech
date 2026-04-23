@@ -1,0 +1,152 @@
+---
+import Section from '../layout/Section.astro';
+import Container from '../layout/Container.astro';
+import Eyebrow from '../primitives/Eyebrow.astro';
+import Button from '../primitives/Button.astro';
+import { localizedPath, t, type Locale } from '../../i18n/ui';
+
+export interface Props {
+  locale: Locale;
+  eyebrow?: string;
+  bullets?: string[];
+}
+
+const { locale, eyebrow, bullets = [] } = Astro.props;
+---
+<Section surface="navy" id="rfq">
+  <Container>
+    <div class="rfq__layout">
+      <div class="rfq__lead">
+        {eyebrow && <Eyebrow class="rfq__eyebrow">{eyebrow}</Eyebrow>}
+        <h2 class="rfq__title">{t(locale, 'rfq.title')}</h2>
+        <p class="rfq__subtitle">{t(locale, 'rfq.subtitle')}</p>
+        {bullets.length > 0 && (
+          <ul class="rfq__bullets">
+            {bullets.map((b) => (
+              <li>
+                <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+                  <path d="M3 8l3.5 3.5L13 5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span>{b}</span>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+      <div class="rfq__cta-card">
+        <p class="rfq__cta-headline">
+          {locale === 'zh-TW' ? '一個工作天內回覆' : 'Reply within one business day.'}
+        </p>
+        <p class="rfq__cta-sub">
+          {locale === 'zh-TW'
+            ? '由業達工程團隊直接回覆您的料號、規格或可行性詢問。'
+            : 'Direct reply from a SEN TECH engineer — part numbers, specs, or feasibility.'}
+        </p>
+        <div class="rfq__cta-actions">
+          <Button variant="primary" href={localizedPath(locale, '/contact')} class="rfq__btn-primary">
+            {t(locale, 'cta.sendInquiry')}
+          </Button>
+          <Button variant="secondary" href={localizedPath(locale, '/products')} class="rfq__btn-secondary">
+            {t(locale, 'cta.viewAllProducts')}
+          </Button>
+        </div>
+      </div>
+    </div>
+  </Container>
+</Section>
+
+<style>
+  .rfq__layout {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-6);
+    align-items: center;
+  }
+  .rfq__lead {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    max-width: 60ch;
+  }
+  .rfq__lead :global(.rfq__eyebrow) { color: var(--color-accent); }
+  .rfq__title {
+    font-family: var(--font-display);
+    font-size: clamp(28px, 3.4vw, 40px);
+    line-height: 1.15;
+    color: #fff;
+    font-weight: 700;
+  }
+  .rfq__subtitle {
+    font-size: 16px;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.78);
+  }
+  .rfq__bullets {
+    list-style: none;
+    padding: 0;
+    margin: var(--space-3) 0 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+  .rfq__bullets li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: rgba(255, 255, 255, 0.86);
+    font-size: 14px;
+  }
+  .rfq__bullets svg { color: var(--color-accent); flex-shrink: 0; }
+  .rfq__cta-card {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: var(--radius-card);
+    padding: var(--space-5);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+  .rfq__cta-headline {
+    font-family: var(--font-display);
+    font-size: 20px;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.3;
+  }
+  .rfq__cta-sub {
+    font-size: 14px;
+    line-height: 1.55;
+    color: rgba(255, 255, 255, 0.72);
+  }
+  .rfq__cta-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin-top: var(--space-2);
+  }
+  .rfq__cta-actions :global(.rfq__btn-primary) {
+    background: var(--color-accent);
+    border-color: var(--color-accent);
+    color: var(--color-primary);
+  }
+  .rfq__cta-actions :global(.rfq__btn-primary:hover) {
+    background: #fff;
+    border-color: #fff;
+    color: var(--color-primary);
+  }
+  .rfq__cta-actions :global(.rfq__btn-secondary) {
+    color: #fff;
+    border-color: rgba(255, 255, 255, 0.5);
+  }
+  .rfq__cta-actions :global(.rfq__btn-secondary:hover) {
+    background: #fff;
+    color: var(--color-primary);
+    border-color: #fff;
+  }
+  @media (min-width: 1024px) {
+    .rfq__layout {
+      grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+      gap: var(--space-7);
+    }
+  }
+</style>

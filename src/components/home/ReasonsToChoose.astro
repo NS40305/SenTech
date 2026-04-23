@@ -1,0 +1,96 @@
+---
+import Section from '../layout/Section.astro';
+import Container from '../layout/Container.astro';
+import Eyebrow from '../primitives/Eyebrow.astro';
+
+export interface Props {
+  eyebrow: string;
+  title: string;
+  reasons: Array<{ icon: string; title: string; body: string }>;
+}
+
+const { eyebrow, title, reasons } = Astro.props;
+
+const iconSvgs: Record<string, string> = {
+  factory:
+    '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 42V20l10 6V20l10 6V12l16 8v22z"/><path d="M6 42h36"/><rect x="14" y="32" width="4" height="6"/><rect x="24" y="32" width="4" height="6"/><rect x="34" y="32" width="4" height="6"/></svg>',
+  precision:
+    '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="24" cy="24" r="18"/><circle cx="24" cy="24" r="10"/><circle cx="24" cy="24" r="2" fill="currentColor"/><line x1="24" y1="2" x2="24" y2="8"/><line x1="24" y1="40" x2="24" y2="46"/><line x1="2" y1="24" x2="8" y2="24"/><line x1="40" y1="24" x2="46" y2="24"/></svg>',
+  agility:
+    '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 24h28l-8-8M36 24l-8 8"/><circle cx="40" cy="12" r="2" fill="currentColor"/><circle cx="40" cy="36" r="2" fill="currentColor"/></svg>',
+};
+---
+<Section surface="white" id="why">
+  <Container>
+    <div class="reasons__intro">
+      <Eyebrow>{eyebrow}</Eyebrow>
+      <h2 class="reasons__title">{title}</h2>
+    </div>
+    <ul class="reasons__grid">
+      {reasons.map((r) => (
+        <li class="reason">
+          <div class="reason__icon" aria-hidden="true" set:html={iconSvgs[r.icon] ?? ''} />
+          <h3 class="reason__title">{r.title}</h3>
+          <p class="reason__body">{r.body}</p>
+        </li>
+      ))}
+    </ul>
+  </Container>
+</Section>
+
+<style>
+  .reasons__intro {
+    max-width: 64ch;
+    margin-bottom: var(--space-6);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+  .reasons__title {
+    font-family: var(--font-display);
+    font-size: clamp(26px, 3vw, 36px);
+    line-height: 1.2;
+    color: var(--color-primary);
+  }
+  .reasons__grid {
+    list-style: none;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
+  .reason {
+    background: #fff;
+    border: 1px solid var(--color-stroke);
+    border-radius: var(--radius-card);
+    padding: var(--space-5);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    transition: border-color var(--duration-fast) var(--easing-base), transform var(--duration-fast) var(--easing-base);
+  }
+  .reason:hover {
+    border-color: var(--color-accent);
+    transform: translateY(-2px);
+  }
+  .reason__icon {
+    width: 44px;
+    height: 44px;
+    color: var(--color-accent);
+  }
+  .reason__icon :global(svg) { width: 100%; height: 100%; }
+  .reason__title {
+    font-family: var(--font-display);
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--color-primary);
+    line-height: 1.25;
+  }
+  .reason__body {
+    font-size: 15px;
+    color: var(--color-text-body);
+    line-height: 1.6;
+  }
+  @media (min-width: 768px) {
+    .reasons__grid { grid-template-columns: repeat(3, 1fr); gap: var(--space-5); }
+  }
+</style>

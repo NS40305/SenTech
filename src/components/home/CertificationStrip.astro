@@ -1,0 +1,100 @@
+---
+import Section from '../layout/Section.astro';
+import Container from '../layout/Container.astro';
+import Eyebrow from '../primitives/Eyebrow.astro';
+
+export interface Props {
+  eyebrow: string;
+  title: string;
+  items: Array<{ name: string; scope: string; logoFile?: string }>;
+}
+
+const { eyebrow, title, items } = Astro.props;
+---
+<Section surface="mist" id="certifications" paddingY="tight">
+  <Container>
+    <header class="certs__header">
+      <Eyebrow>{eyebrow}</Eyebrow>
+      <h2 class="certs__title">{title}</h2>
+    </header>
+    <ul class="certs__grid">
+      {items.map((c) => (
+        <li class="cert">
+          <div class="cert__badge" aria-hidden="true">
+            <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5" xmlns="http://www.w3.org/2000/svg">
+              <path d="M16 3l3.5 2.7 4.4-.5 2 4 4 2-2 4 .5 4.4-4 2-2.7 3.5-4.4-.5L16 28l-2.7-2.4-4.4.5-2.7-3.5-4-2 .5-4.4-2-4 4-2 2-4 4.4.5z"/>
+              <path d="M11 16l3.5 3.5L21 13" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="cert__text">
+            <span class="cert__name">{c.name}</span>
+            <span class="cert__scope">{c.scope}</span>
+          </div>
+        </li>
+      ))}
+    </ul>
+  </Container>
+</Section>
+
+<style>
+  .certs__header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    margin-bottom: var(--space-5);
+    text-align: center;
+    align-items: center;
+  }
+  .certs__title {
+    font-family: var(--font-display);
+    font-size: clamp(20px, 2.4vw, 26px);
+    line-height: 1.3;
+    color: var(--color-primary);
+    font-weight: 700;
+  }
+  .certs__grid {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-3);
+  }
+  .cert {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-3) var(--space-4);
+    background: #fff;
+    border: 1px solid var(--color-stroke);
+    border-radius: var(--radius-card);
+  }
+  .cert__badge {
+    flex-shrink: 0;
+    width: 36px;
+    height: 36px;
+    color: var(--color-accent);
+  }
+  .cert__badge svg { width: 100%; height: 100%; }
+  .cert__text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+  }
+  .cert__name {
+    font-family: var(--font-display);
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--color-primary);
+    line-height: 1.2;
+  }
+  .cert__scope {
+    font-size: 12px;
+    color: var(--color-text-muted);
+    line-height: 1.3;
+  }
+  @media (min-width: 768px) {
+    .certs__grid { grid-template-columns: repeat(4, 1fr); }
+  }
+</style>

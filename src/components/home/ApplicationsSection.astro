@@ -1,0 +1,156 @@
+---
+import Section from '../layout/Section.astro';
+import Container from '../layout/Container.astro';
+import Eyebrow from '../primitives/Eyebrow.astro';
+import { localizedPath, type Locale } from '../../i18n/ui';
+
+export interface Props {
+  locale: Locale;
+  eyebrow: string;
+  title: string;
+  subtitle: string;
+  applications: Array<{
+    slug: string;
+    industry: string;
+    body: string;
+    image: string;
+    cta?: string;
+  }>;
+}
+
+const { locale, eyebrow, title, subtitle, applications } = Astro.props;
+---
+<Section surface="white" id="applications">
+  <Container>
+    <header class="apps__header">
+      <Eyebrow>{eyebrow}</Eyebrow>
+      <h2 class="apps__title">{title}</h2>
+      <p class="apps__subtitle">{subtitle}</p>
+    </header>
+    <ul class="apps__grid">
+      {applications.map((app) => (
+        <li class="app-card">
+          <a class="app-card__link" href={localizedPath(locale, `/applications/${app.slug}`)}>
+            <div class="app-card__media">
+              <img src={app.image} alt={app.industry} loading="lazy" decoding="async" width="640" height="480" />
+              <div class="app-card__overlay" aria-hidden="true"></div>
+              <h3 class="app-card__industry">{app.industry}</h3>
+            </div>
+            <div class="app-card__body">
+              <p class="app-card__text">{app.body}</p>
+              {app.cta && (
+                <span class="app-card__cta">
+                  {app.cta}
+                  <span aria-hidden="true">→</span>
+                </span>
+              )}
+            </div>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </Container>
+</Section>
+
+<style>
+  .apps__header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    max-width: 64ch;
+    margin-bottom: var(--space-6);
+  }
+  .apps__title {
+    font-family: var(--font-display);
+    font-size: clamp(26px, 3vw, 36px);
+    line-height: 1.2;
+    color: var(--color-primary);
+  }
+  .apps__subtitle {
+    font-size: 16px;
+    color: var(--color-text-body);
+    line-height: 1.6;
+  }
+  .apps__grid {
+    list-style: none;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+    padding: 0;
+    margin: 0;
+  }
+  .app-card {
+    background: #fff;
+    border: 1px solid var(--color-stroke);
+    border-radius: var(--radius-card);
+    overflow: hidden;
+    transition: border-color var(--duration-fast) var(--easing-base),
+      transform var(--duration-fast) var(--easing-base);
+  }
+  .app-card:hover {
+    border-color: var(--color-accent);
+    transform: translateY(-2px);
+  }
+  .app-card__link {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    text-decoration: none;
+    color: inherit;
+  }
+  .app-card__media {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    background: var(--color-surface-alt);
+  }
+  .app-card__media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform var(--duration-base) var(--easing-base);
+  }
+  .app-card:hover .app-card__media img {
+    transform: scale(1.04);
+  }
+  .app-card__overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(14, 42, 71, 0) 35%, rgba(14, 42, 71, 0.85) 100%);
+  }
+  .app-card__industry {
+    position: absolute;
+    left: var(--space-4);
+    bottom: var(--space-4);
+    color: #fff;
+    font-family: var(--font-display);
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 1.2;
+    text-shadow: 0 1px 6px rgba(0, 0, 0, 0.3);
+  }
+  .app-card__body {
+    padding: var(--space-4);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    flex: 1;
+  }
+  .app-card__text {
+    font-size: 14px;
+    color: var(--color-text-body);
+    line-height: 1.55;
+    flex: 1;
+  }
+  .app-card__cta {
+    color: var(--color-accent);
+    font-weight: 600;
+    font-size: 14px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  @media (min-width: 768px) {
+    .apps__grid { grid-template-columns: repeat(3, 1fr); gap: var(--space-4); }
+  }
+</style>

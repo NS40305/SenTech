@@ -1,0 +1,67 @@
+---
+import Container from '../layout/Container.astro';
+
+export interface Props {
+  numbers: Array<{ value: string; suffix?: string; label: string }>;
+}
+
+const { numbers } = Astro.props;
+---
+<section class="numbers">
+  <Container>
+    <ul class="numbers__grid">
+      {numbers.map((n) => (
+        <li class="numbers__item">
+          <div class="numbers__value">
+            <span>{n.value}</span>
+            {n.suffix && <span class="numbers__suffix">{n.suffix}</span>}
+          </div>
+          <div class="numbers__label">{n.label}</div>
+        </li>
+      ))}
+    </ul>
+  </Container>
+</section>
+
+<style>
+  .numbers {
+    background: var(--color-primary);
+    color: #fff;
+    padding-block: var(--space-6);
+  }
+  .numbers__grid {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-5) var(--space-4);
+  }
+  .numbers__item {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    text-align: left;
+  }
+  .numbers__value {
+    font-family: var(--font-mono);
+    font-size: clamp(28px, 3.6vw, 42px);
+    font-weight: 700;
+    line-height: 1;
+    color: #fff;
+    display: inline-flex;
+    align-items: baseline;
+  }
+  .numbers__suffix {
+    font-size: 0.7em;
+    color: var(--color-accent);
+    margin-left: 2px;
+  }
+  .numbers__label {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.7);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  @media (min-width: 768px) {
+    .numbers__grid { grid-template-columns: repeat(5, 1fr); gap: var(--space-4); }
+  }
+</style>

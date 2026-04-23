@@ -1,0 +1,145 @@
+---
+import Section from '../layout/Section.astro';
+import Container from '../layout/Container.astro';
+import Eyebrow from '../primitives/Eyebrow.astro';
+import Button from '../primitives/Button.astro';
+import { localizedPath, type Locale } from '../../i18n/ui';
+
+export interface Props {
+  locale: Locale;
+  eyebrow: string;
+  title: string;
+  body: string;
+  steps: Array<{ title: string; body: string }>;
+  leadTimeNote: string;
+  ctaLabel: string;
+}
+
+const { locale, eyebrow, title, body, steps, leadTimeNote, ctaLabel } = Astro.props;
+---
+<Section surface="white" id="oem">
+  <Container>
+    <div class="oem__layout">
+      <div class="oem__intro">
+        <Eyebrow>{eyebrow}</Eyebrow>
+        <h2 class="oem__title">{title}</h2>
+        <p class="oem__body">{body}</p>
+        <p class="oem__lead-time">
+          <span class="oem__lead-dot" aria-hidden="true"></span>
+          {leadTimeNote}
+        </p>
+        <div class="oem__cta">
+          <Button variant="primary" href={localizedPath(locale, '/contact')}>{ctaLabel}</Button>
+        </div>
+      </div>
+      <ol class="oem__steps">
+        {steps.map((s, i) => (
+          <li class="oem__step">
+            <div class="oem__step-num">{String(i + 1).padStart(2, '0')}</div>
+            <div class="oem__step-content">
+              <h3 class="oem__step-title">{s.title}</h3>
+              <p class="oem__step-body">{s.body}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </Container>
+</Section>
+
+<style>
+  .oem__layout {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-6);
+  }
+  .oem__intro {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    max-width: 60ch;
+  }
+  .oem__title {
+    font-family: var(--font-display);
+    font-size: clamp(26px, 3vw, 36px);
+    line-height: 1.2;
+    color: var(--color-primary);
+  }
+  .oem__body {
+    font-size: 16px;
+    color: var(--color-text-body);
+    line-height: 1.6;
+  }
+  .oem__lead-time {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--color-accent);
+    margin-top: var(--space-2);
+  }
+  .oem__lead-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--color-accent);
+    box-shadow: 0 0 0 4px rgba(0, 166, 192, 0.18);
+  }
+  .oem__cta {
+    margin-top: var(--space-3);
+  }
+  .oem__steps {
+    list-style: none;
+    counter-reset: step;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-3);
+    padding: 0;
+    margin: 0;
+    position: relative;
+  }
+  .oem__step {
+    display: grid;
+    grid-template-columns: 56px 1fr;
+    gap: var(--space-3);
+    padding: var(--space-4);
+    background: var(--color-surface);
+    border: 1px solid var(--color-stroke);
+    border-radius: var(--radius-card);
+    align-items: flex-start;
+    transition: border-color var(--duration-fast) var(--easing-base);
+  }
+  .oem__step:hover { border-color: var(--color-accent); }
+  .oem__step-num {
+    font-family: var(--font-mono);
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--color-accent);
+    line-height: 1;
+    letter-spacing: -0.04em;
+  }
+  .oem__step-title {
+    font-family: var(--font-display);
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--color-primary);
+    margin-bottom: 4px;
+  }
+  .oem__step-body {
+    font-size: 14px;
+    color: var(--color-text-body);
+    line-height: 1.5;
+  }
+  @media (min-width: 1024px) {
+    .oem__layout {
+      grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+      gap: var(--space-7);
+      align-items: start;
+    }
+    .oem__steps {
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--space-3);
+    }
+  }
+</style>

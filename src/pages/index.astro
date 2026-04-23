@@ -1,24 +1,135 @@
 ---
+import { getCollection, getEntry } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import SiteHeader from '../components/layout/SiteHeader.astro';
 import SiteFooter from '../components/layout/SiteFooter.astro';
 import FloatingRfqButton from '../components/layout/FloatingRfqButton.astro';
-import Section from '../components/layout/Section.astro';
-import Container from '../components/layout/Container.astro';
+import Hero from '../components/home/Hero.astro';
+import NumbersStrip from '../components/home/NumbersStrip.astro';
+import ReasonsToChoose from '../components/home/ReasonsToChoose.astro';
+import ProductGrid from '../components/home/ProductGrid.astro';
+import OemWorkflow from '../components/home/OemWorkflow.astro';
+import ApplicationsSection from '../components/home/ApplicationsSection.astro';
+import ManufacturingDiagram from '../components/home/ManufacturingDiagram.astro';
+import MilestoneTimeline from '../components/home/MilestoneTimeline.astro';
+import CertificationStrip from '../components/home/CertificationStrip.astro';
+import RfqSection from '../components/home/RfqSection.astro';
+import { t } from '../i18n/ui';
+
+const locale = 'en' as const;
+const home = await getEntry('home', 'home-en');
+const milestones = await getEntry('milestones', 'milestones-en');
+const certs = await getEntry('certifications', 'certifications');
+
+const productEntries = await getCollection('products', ({ data }) => data.locale === 'en');
+const products = productEntries.map((e) => e.data);
+
+const applicationOrder = ['home-appliance', 'automotive-electronics', 'consumer-electronics-3c'];
+const applicationImageMap: Record<string, string> = {
+  'home-appliance': '/images/app-home-appliance.jpg',
+  'automotive-electronics': '/images/app-automotive.jpg',
+  'consumer-electronics-3c': '/images/app-3c.jpg',
+};
+const appEntries = await getCollection('applications', ({ data }) => data.locale === 'en');
+const applications = applicationOrder
+  .map((slug) => appEntries.find((e) => e.data.slug === slug))
+  .filter((e): e is NonNullable<typeof e> => Boolean(e))
+  .map((e) => ({
+    slug: e.data.slug,
+    industry: e.data.industry,
+    body: e.data.body,
+    image: applicationImageMap[e.data.slug] ?? '/images/app-home-appliance.jpg',
+    cta: 'Explore use cases',
+  }));
+
+if (!home || !milestones || !certs) {
+  throw new Error('Missing required content entries for EN homepage');
+}
+
+const homeData = home.data;
+const heroImagePath = '/images/hero-1.jpg';
+
+const rfqBullets = [
+  '5 working day feasibility review',
+  'Samples direct from in-house pilot line',
+  'Engineering reply, not a sales auto-responder',
+];
 ---
 <BaseLayout
-  title="SEN TECH — Precision NTC sensors"
-  description="From NTC chip to finished sensor under one roof."
-  locale="en"
+  title="SEN TECH — Precision NTC sensors from chip to finished sensor"
+  description={homeData.hero.subhead}
+  locale={locale}
   path="/"
 >
-  <SiteHeader slot="header" locale="en" />
-  <Section surface="white">
-    <Container>
-      <h1>SEN TECH</h1>
-      <p>From NTC chip to finished sensor — under one roof.</p>
-    </Container>
-  </Section>
-  <SiteFooter slot="footer" locale="en" />
-  <FloatingRfqButton locale="en" />
+  <SiteHeader slot="header" locale={locale} />
+
+  <Hero
+    locale={locale}
+    headline={homeData.hero.headline}
+    subhead={homeData.hero.subhead}
+    ctaPrimaryLabel={homeData.hero.ctaPrimaryLabel}
+    ctaSecondaryLabel={homeData.hero.ctaSecondaryLabel}
+    heroImage={heroImagePath}
+    stats={homeData.hero.stats}
+  />
+
+  <NumbersStrip numbers={homeData.numbers} />
+
+  <ReasonsToChoose
+    eyebrow="Why SEN TECH"
+    title="Three reasons OEMs choose us as their NTC partner."
+    reasons={homeData.reasons}
+  />
+
+  <ProductGrid
+    locale={locale}
+    eyebrow={homeData.productsIntro.eyebrow}
+    title={homeData.productsIntro.title}
+    subtitle={homeData.productsIntro.subtitle}
+    viewAllLabel={t(locale, 'cta.viewAllProducts')}
+    products={products}
+  />
+
+  <OemWorkflow
+    locale={locale}
+    eyebrow={homeData.oem.eyebrow}
+    title={homeData.oem.title}
+    body={homeData.oem.body}
+    steps={homeData.oem.steps}
+    leadTimeNote={homeData.oem.leadTimeNote}
+    ctaLabel={homeData.oem.ctaLabel}
+  />
+
+  <ApplicationsSection
+    locale={locale}
+    eyebrow={homeData.applicationsIntro.eyebrow}
+    title={homeData.applicationsIntro.title}
+    subtitle={homeData.applicationsIntro.subtitle}
+    applications={applications}
+  />
+
+  <ManufacturingDiagram
+    eyebrow={homeData.manufacturing.eyebrow}
+    title={homeData.manufacturing.title}
+    body={homeData.manufacturing.body}
+    tiles={homeData.manufacturing.tiles}
+  />
+
+  <MilestoneTimeline
+    eyebrow={homeData.about.eyebrow}
+    title={homeData.about.title}
+    body={homeData.about.body}
+    items={milestones.data.items}
+  />
+
+  <CertificationStrip
+    eyebrow="Certifications"
+    title="Quality systems and compliance frameworks our products are built to."
+    items={certs.data.items}
+  />
+
+  <RfqSection locale={locale} eyebrow="Get in touch" bullets={rfqBullets} />
+
+  <SiteFooter slot="footer" locale={locale} />
+  <FloatingRfqButton locale={locale} />
 </BaseLayout>

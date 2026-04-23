@@ -1,0 +1,138 @@
+---
+import Container from '../layout/Container.astro';
+import Button from '../primitives/Button.astro';
+import { localizedPath, type Locale } from '../../i18n/ui';
+
+export interface Props {
+  locale: Locale;
+  headline: string;
+  subhead: string;
+  ctaPrimaryLabel: string;
+  ctaSecondaryLabel: string;
+  heroImage?: string;
+  stats?: Array<{ value: string; suffix?: string; label: string }>;
+}
+
+const {
+  locale,
+  headline,
+  subhead,
+  ctaPrimaryLabel,
+  ctaSecondaryLabel,
+  heroImage = '/images/hero-1.jpg',
+  stats = [],
+} = Astro.props;
+---
+<section class="hero" style={`--hero-bg: url('${heroImage}')`}>
+  <div class="hero__bg" aria-hidden="true"></div>
+  <Container class="hero__content">
+    <h1 class="hero__headline">{headline}</h1>
+    <p class="hero__subhead">{subhead}</p>
+    <div class="hero__ctas">
+      <Button variant="primary" href={localizedPath(locale, '/contact')}>{ctaPrimaryLabel}</Button>
+      <Button variant="secondary" href="#products">{ctaSecondaryLabel}</Button>
+    </div>
+    {stats.length > 0 && (
+      <ul class="hero__stats">
+        {stats.map((s) => (
+          <li>
+            <span class="hero__stat-value">{s.value}{s.suffix ?? ''}</span>
+            <span class="hero__stat-label">{s.label}</span>
+          </li>
+        ))}
+      </ul>
+    )}
+  </Container>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    min-height: 600px;
+    display: flex;
+    align-items: center;
+    color: #fff;
+    overflow: hidden;
+    isolation: isolate;
+  }
+  .hero__bg {
+    position: absolute;
+    inset: 0;
+    background-image: var(--hero-bg);
+    background-size: cover;
+    background-position: center;
+    z-index: -1;
+  }
+  .hero__bg::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(rgba(14, 42, 71, 0.78), rgba(14, 42, 71, 0.62));
+  }
+  .hero__content {
+    position: relative;
+    padding-block: var(--space-7);
+    max-width: 880px;
+  }
+  .hero__headline {
+    font-family: var(--font-display);
+    font-size: clamp(34px, 5vw, 56px);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: #fff;
+    margin-bottom: var(--space-4);
+  }
+  .hero__subhead {
+    font-family: var(--font-body);
+    font-size: clamp(15px, 1.6vw, 19px);
+    line-height: 1.55;
+    color: rgba(255, 255, 255, 0.86);
+    max-width: 64ch;
+    margin-bottom: var(--space-5);
+  }
+  .hero__ctas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin-bottom: var(--space-6);
+  }
+  .hero__ctas :global(.btn--secondary) {
+    color: #fff;
+    border-color: rgba(255, 255, 255, 0.6);
+  }
+  .hero__ctas :global(.btn--secondary:hover) {
+    background: #fff;
+    color: var(--color-primary);
+    border-color: #fff;
+  }
+  .hero__stats {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-6);
+    padding-top: var(--space-4);
+    border-top: 1px solid rgba(255, 255, 255, 0.18);
+  }
+  .hero__stats li {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .hero__stat-value {
+    font-family: var(--font-mono);
+    font-size: 22px;
+    font-weight: 700;
+    color: #fff;
+  }
+  .hero__stat-label {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: rgba(255, 255, 255, 0.7);
+  }
+  @media (min-width: 768px) {
+    .hero { min-height: 680px; }
+    .hero__content { padding-block: var(--space-8); }
+  }
+</style>
